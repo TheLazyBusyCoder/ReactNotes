@@ -50,7 +50,9 @@
     </body>
   </html>
 
-// react with vite 
+// react with vite is good for project
+
+// react with create-react-app good for learnign
 
 npx create-react-app projectName
 
