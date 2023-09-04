@@ -1,0 +1,286 @@
+src/index.js  // entry point of the project
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+function App() {
+  return <h1>hi how are you</h1>;
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+
+///////////////////////////
+/// COMPONENTS
+
+// Each component has its own data , js logic , appearance 
+
+// to create a componenet 
+  function Pizza() {
+    return (
+      <div>
+        <img src="pizzas/focaccia.jpg" alt=""></img>
+        <h1>Pizza Prosciutto</h1>
+        <p>Tomato, mozarella, ham, aragula, and burrata cheese</p>
+        <p>Price: 18</p>
+      </div>
+    );
+  }
+
+// to add it in the main App
+  function App() {
+    return (
+      <div>
+        <Pizza />
+      </div>
+    );
+  }
+
+// to render our components to the dom
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+
+  root.render(
+    <React.StrictMode>  //a tool that highlights potential issues in a programme
+      <App />
+    </React.StrictMode>
+  );
+
+//////////////////////////
+/// JSX
+
+// just an extension of js 
+// every jsx is converted to html because browser understands only html 
+
+// how bable help react and jsx 
+  Normal html
+
+  <header>
+    <h1 style="color: red">
+      Hello
+    </h1>
+  </header>
+
+  Html converted to component using bable that is automatically imported 
+
+  React.createElement(
+    'header' ,
+    null , 
+    React.createElement(
+      'h1',
+      {style: { color: 'red' } },
+      Hello
+    )
+  );
+
+//////////////////////////
+/// Styling Components in React
+
+// entering in javascript mode and passing an object. 
+return <h1 style={{color:'red' , fontSize="32px"}}>Hello</h1>
+
+// to import external css (webpack will do the mixing and stuff)
+  import React from "react";
+  import ReactDOM from "react-dom/client";
+  import "./index.css";
+
+  function Menu() {
+    return (
+      <main className="menu">
+        <h2>Our menue</h2>
+        <Pizza />
+      </main>
+    );
+  }
+
+//////////////////////////
+/// PROPS
+
+  // passing data from parent components to child components
+
+// EXAMPLE: 
+  function Menu() {
+    return (
+      <main className="menu">
+        <h2>Our menue</h2>
+        <Pizza
+          name="Pizza Prosciutto"
+          desc="Tomato, mozarella, ham, aragula, and burrata cheese"
+          price={18}  // getting in js mode to send number insted of string.
+          src="pizzas/focaccia.jpg"
+        />
+      </main>
+    );
+  }
+
+  function Pizza(props) {
+    return (
+      <div className="pizza">
+        <img src={props.src} alt={props.name}></img>
+        <div>
+          <h3>{props.name}</h3>
+          <p>{props.desc}</p>
+          <p>Price: {props.price + 1}</p>
+        </div>
+      </div>
+    );
+  }
+
+// Data in a component is either Props or State 
+Props = parent sending data to child 
+State = component changing data with its own logic
+
+//  CHALLANGE #1 (on code sand box)
+#code
+  import "./styles.css";
+
+  export default function App() {
+    return (
+      <div className="card">
+        <Avatar />
+        <Data />
+        <Skill />
+      </div>
+    );
+  }
+
+  function Skill() {
+    return (
+      <ul className="skill-list">
+        <SkillList name="html" emo="#" bgcol="red" />
+        <SkillList name="css" emo="#" bgcol="blue" />
+        <SkillList name="javascript" emo="#" bgcol="yellow" />
+      </ul>
+    );
+  }
+
+  function SkillList(props) {
+    return (
+      <li className="skill" style={{ backgroundColor: props.bgcol }}>
+        {props.name} {props.emo}
+      </li>
+    );
+  }
+
+  function Data() {
+    return (
+      <div className="data">
+        <h1>Leo harry</h1>
+        <p>Hi my name is leo i am learning react</p>
+      </div>
+    );
+  }
+
+  function Avatar() {
+    return <img className="avatar" src="" alt="some"></img>;
+  }
+
+
+// JSX rules 
+
+ - html but has js mode with {} <- we can use expressions , but cannot use statments. 
+ - jsx is just javascript 
+ - we can store jsx in any variable. 
+
+
+//////////////////////////
+/// Rendering lists/array of data to component 
+  each time we render we need seperate key for seperate component
+  function Menu() {
+    return (
+      <main className="menu">
+        <h2>Our menue</h2>
+        <ul className="pizzas">
+        // looping and returning components + passing the data to child
+          {pizzaData.map((pizza) => {
+            return <Pizza key={pizza.name} pizzaObj={pizza} />;
+          })}
+        </ul>
+      </main>
+    );
+  }
+
+  function Pizza(props) {
+    return (
+      <li className="pizza">
+        <img src={props.pizzaObj.photoName} alt={props.name}></img>
+        <div>
+          <h3>{props.pizzaObj.name}</h3>
+          <p>{props.pizzaObj.ingredients}</p>
+          <p>Price: {props.pizzaObj.price + 1}</p>
+        </div>
+      </li>
+    );
+  }
+
+
+//////////////////////////
+/// Conditional rendering
+
+// using '&&'
+  function Footer() {
+    const hour = new Date().getHours;
+    const isOpen = hour >= 12 && hour <= 7;
+    return (
+      <footer className="footer">
+        {isOpen && new Date().toLocaleTimeString()} We are Open!!
+      </footer>
+    );
+  }
+
+  {pizzaData && (
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => {
+              return <Pizza pizzaObj={pizza} />;
+            })}
+          </ul>
+  )}
+
+// using Ternary operator
+  return (
+    <main className="menu">
+      <h2>Our menue</h2>
+      {pizzaData.length > 0 ? (
+        <ul className="pizzas">
+          {pizzaData.map((pizza) => {
+            return <Pizza pizzaObj={pizza} />;
+          })}
+        </ul>
+      ) : (
+        <p>We are still working on our menue</p>
+      )}
+    </main>
+  );
+
+// Multiple return 
+  - use if statements 
+
+// Destructuring props 
+  function Component({pizzaObject}) <- like this we are destructuring
+
+// React Fragments 
+  rendering 2 elements <h1></h1><p></p> like this without <div></div>
+
+  this is a react fragment :) 
+  <React.Fragment>
+    <h1></h1>
+    <p></p>
+  </React.Fragment>
+  // if we dont need the key , we use <> </>
+
+// conditinaly setting text and class name 
+  use ternary ()?():()
+
+  className={classOne `${condition ? "sold-out" : "" }`}
+
+  
+
+
+
+
+
