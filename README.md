@@ -27,4 +27,18 @@
       <li>Nothing new</li>
     </ul>
   </p>
+  <h2>Section 5</h2>
+  <p>
+    <ul>
+      <li>Importing react and react-dom</li>
+      <li>Components</li>
+      <li>JSX</li>
+      <li>Styling Components in React</li>
+      <li>Props</li>
+      <li>Rendering lists</li>
+      <li>Condition rendering</li>
+      <li>React.Rragment</li>
+      <li></li>
+    </ul>
+  </p>
 </div>
