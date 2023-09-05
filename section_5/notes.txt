@@ -278,7 +278,98 @@ State = component changing data with its own logic
 
   className={classOne `${condition ? "sold-out" : "" }`}
 
-  
+// CHALLANGE #2
+#code
+  import { StrictMode } from "react";
+  import { createRoot } from "react-dom/client";
+  import "./styles.css";
+
+  const skills = [
+    {
+      skill: "HTML+CSS",
+      level: "advanced",
+      color: "#2662EA"
+    },
+    {
+      skill: "JavaScript",
+      level: "advanced",
+      color: "#EFD81D"
+    },
+    {
+      skill: "Web Design",
+      level: "advanced",
+      color: "#C3DCAF"
+    },
+    {
+      skill: "Git and GitHub",
+      level: "intermediate",
+      color: "#E84F33"
+    },
+    {
+      skill: "React",
+      level: "advanced",
+      color: "#60DAFB"
+    },
+    {
+      skill: "Svelte",
+      level: "beginner",
+      color: "#FF3B00"
+    }
+  ];
+
+  function App() {
+    return (
+      <div className="card">
+        <Avatar />
+        <Data />
+        <Skill />
+      </div>
+    );
+  }
+
+  function Skill() {
+    return (
+      <ul className="skill-list">
+        {
+          skills.map(function(ele) {
+            return <SkillList skillObj={ele} />
+          })
+        }
+      </ul>
+    );
+  }
+
+  function SkillList(props) {
+    return (
+      <li className="skill" style={{ backgroundColor: props.skillObj.color }}>
+        {props.skillObj.skill} {props.skillObj.level == 'beginner' ? '#' : '-'}
+      </li>
+    );
+  }
+
+  function Data() {
+    return (
+      <div className="data">
+        <h1>Leo harry</h1>
+        <p>Hi my name is leo i am learning react</p>
+      </div>
+    );
+  }
+
+  function Avatar() {
+    return <img className="avatar" src="" alt="some"></img>;
+  }
+
+
+  const rootElement = document.getElementById("root");
+  const root = createRoot(rootElement);
+
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+
 
 
 
