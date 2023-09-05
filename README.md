@@ -37,8 +37,17 @@
       <li>Props</li>
       <li>Rendering lists</li>
       <li>Condition rendering</li>
-      <li>React.Rragment</li>
-      <li></li>
+      <li>React.Fragment</li>
+    </ul>
+  </p>
+  <h2>Section 6</h2>
+  <p>
+    <ul>
+      <li>Handling events</li>
+      <li>State</li>
+      <li>Forms in react</li>
+      <li>* Controlled Element</li>
+      <li>Imp challange</li>
     </ul>
   </p>
 </div>
