@@ -1,6 +1,6 @@
 # ReactNotes
 
-<table style="width: 100%"> 
+<table style="color: red"> 
   <thead>
     <td>Section</td>
     <td>Topics</td>
