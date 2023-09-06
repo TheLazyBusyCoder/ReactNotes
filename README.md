@@ -1,23 +1,5 @@
 # ReactNotes
 
-<table > 
-  <thead>
-    <td>Section</td>
-    <td>Topics</td>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>
-        <ul>
-          <li style="color: red">Introduction</li>
-          <li>Simple Project</li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
 <div>
   <h2>Section 1</h2>
   <p>
