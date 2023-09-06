@@ -50,4 +50,14 @@
       <li>Imp challange</li>
     </ul>
   </p>
+  <h2>Section 7</h2>
+  <p>
+    <ul>
+      <li>Lifting up state</li>
+      <li>Deleting an element</li>
+      <li>Updating an element</li>
+      <li>Derived state</li>
+      <li>Children prop</li>
+    </ul>
+  </p>
 </div>
