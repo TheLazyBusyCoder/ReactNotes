@@ -1,6 +1,6 @@
 # ReactNotes
 
-<table style="color: red"> 
+<table > 
   <thead>
     <td>Section</td>
     <td>Topics</td>
@@ -10,7 +10,7 @@
       <td>1</td>
       <td>
         <ul>
-          <li>Introduction</li>
+          <li style="color: red">Introduction</li>
           <li>Simple Project</li>
         </ul>
       </td>
