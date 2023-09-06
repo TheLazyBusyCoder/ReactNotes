@@ -5,6 +5,17 @@
     <td>Section</td>
     <td>Topics</td>
   </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>
+        <ul>
+          <li>Introduction</li>
+          <li>Simple Project</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
 </table>
 
 <div>
