@@ -1,5 +1,12 @@
 # ReactNotes
 
+<table> 
+  <thead>
+    <td>Section</td>
+    <td>Topics</td>
+  </thead>
+</table>
+
 <div>
   <h2>Section 1</h2>
   <p>
@@ -60,4 +67,5 @@
       <li>Children prop</li>
     </ul>
   </p>
+  <h1>Section 8 (project) (not done)</h1>
 </div>
