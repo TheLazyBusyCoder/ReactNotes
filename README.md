@@ -62,5 +62,11 @@
   </p>
   <h1>Section 8 (project) (not done)</h1>
   <h1>Section 9</h1>
-  <li></li>
+  <li>How to determine component size</li>
+  <li>Prop Drilling</li>
+  <li>Component Composition</li>
+  <li>Reusable component using CC</li>
+  <li>Hover Effect</li>
+  <li>Props as an Component API</li>
+  <li>PropTypes</li>
 </div>
