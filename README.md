@@ -61,7 +61,7 @@
     </ul>
   </p>
   <h1>Section 8 (project) (not done)</h1>
-  <h1>Section 9</h1>
+  <h1>Section 10</h1>
   <li>How to determine component size</li>
   <li>Prop Drilling</li>
   <li>Component Composition</li>

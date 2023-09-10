@@ -1,0 +1,212 @@
+//////////////////////////
+/// COMPONENT VS INSTANCE VS ELEMENT
+
+  // Componenet = blueprint 
+
+  // React element = its an object that conatins the imformation of creating an element in the DOM
+
+  // printing element's => an Object 
+  console.log(<DifferentContent />); 
+  console.log(DifferentContent()); // same but donsnot have some properties
+
+  // passing props 
+  TabContent({item: content[0]})  // would work , but react will not see it as an component instances 
+
+//////////////////////////
+/// HOW REACT WORKS BEHIND THE SCENE 
+
+  // ReactElement -> React.createElement(); 
+
+  Component A = A1 + A2 + A3 -> ReactElement -> DomElement(HTML) -> UI
+
+  Component B = B1 -> ReactElement -> DomElement(HTML) -> UI
+
+  (First Phase): Render is Triggered by updating state somewhere
+
+  (Render Phase): react calls component functions and figures out how DOM should be updated  , (still not displaying elements)
+
+  (Commit Phase): React actually writes to the DOM , updating , inserting and deleting elements
+
+  // React looks for change in the whole tree , but updates the only component where the state changes. 
+  // React do renders after the js engin is free. 
+
+//////////////////////////
+/// RENDER PHASE 
+
+  // React Element Tree: in this the React creates a Virtual DOM (A big React element (object) (Tree) where all the details of the component is stored)
+
+  // A a component is updated , its children is also updated in the new Virtual DOM (React element tree) when a state changes in a component. 
+
+  // Reconsilisation: Deciding which DOM element actually need to be inserted , deleted or updated in order to reflect the latest state changes. 
+
+  // After creating new VD , fiber tree is updated of React , 
+
+  // Reconsiler (fiber) : the engin of react. 
+
+  // HOW RENDERING WORKS IN THE COMMIT PHASE
+
+  // just in abstraction 
+
+  // Committing is synchromous: DOM is updated in one go, it can't be interrupted. This is necessary so that the DOM never shows partial interrupted. This is necessary so that th eDOM never shos partial results , ensuring a consistent UI 
+
+  // ReactDOM does the commit phase , not React 
+
+  // RENDERERS: (host's)
+  ReactDOM 
+  React Native - this is similier to ReactDOM , used to create IOS and Android apps
+
+  // React it self is only responsible for React Element tree , Render Phase , not commit phase.
+  // Different React host do the commit stuff and updates the UI. 
+
+  // Trigger -> Render Phase -> New VD -> New VD + Current FT = Reconciliation + Diffing (find smallest number of dom updates) (Fiber tree (immutable data structure)) -> Updated FT -> List of DOM updates -> -> Updated Dom (Commit Phase) (synchronouse) -> BROWSER PAINT (updated ui on screen)
+
+  // How Diffing works 
+
+  Diffing uses 2 rules: 
+
+  1. Two elements of different types will produce diffeerent trees.
+  2. Elements with a stable key prop stay the same across renders. 
+
+  1. Same position , different element 
+  <div>
+  <searchBar />
+  <div>
+  <main>...</main>
+
+  // in this case the whole div with searchbar will be removed with the states and reubild 
+  <header>
+  <searchBar />
+  <header>
+  <main>...</main>
+
+  2. Same position , same element
+
+  <div className="hidden">
+  <searchBar />
+  </div>
+  <main>...</main>
+
+  <div className="active">
+  <searchBar />
+  </div>
+  <main>...</main>
+
+  // Element will be kept (as well as child elements) , including state. 
+
+  // Diffing in practice
+  // When switch the tab component , the state is preserved. (Same element is there so state is preserved and component is not changed rule 1) only props is changed
+
+//////////////////////////
+/// KEY PROP
+
+  // reseting the state for same element in same position 
+
+  // special prop that we use to tell the diffing algorithm that an element is unique 
+
+  // allows react to distinguish between multiple instances of the same componenet type 
+
+  // when a key stays the same across renders, the element will be kept in the DOM even if the position in the tree changes. 
+
+  // When a key changes between renders , the element will be destroyed and a new one will be created(even if the positino in the tree is the same as before). 
+
+  1. Keys in List's [Stabel key]
+
+  <ul>
+  <Question question={1} />
+  <Question question={2} />
+  </ul>
+
+  // here the question 1 , 2 will be rebuild as their position has been changed. (waste at work)
+  <ul>
+  <Question question={0} />
+  <Question question={1} />
+  <Question question={2} />
+  </ul>
+
+  // So we use key. 
+  <ul>
+  <Question key='q1' question={1} />
+  <Question key='q2' question={2} />
+  </ul>
+
+  <ul>
+  <Question key='q0' question={0} />
+  <Question key='q1' question={1} />
+  <Question key='q2' question={2} />
+  </ul>
+  // by using the key prop , now react knows that the elements are the same only the position has been changed. So the elements will not be rebuild.
+
+  // always use the key prop when you have multiple child elements of the same type. 
+
+  // KEY PROP TO RESET STATE [Changing Key]
+
+  // key='q1' -> key='q2' (this will reset the state's )
+
+//////////////////////////
+/// RULES FOR RENDER LOGIC 
+
+  1. Render logic 
+
+  view theory pdf 
+
+  Render logic = jsx , functions , return 
+
+  Pure component: 
+
+  // side effect = when a function modifies external data outside of function 
+
+  // pure function : function that does not change external data. 
+
+  Components should always be pure components , same output if we pass the props 
+
+  // we can use side effects in event handler functions!
+
+//////////////////////////
+/// STATE UPDATE BATCHING
+
+  in the same event handler function states are not updated evertime when we change a state. insted the sate are batched and updated onece , and rendered. 
+
+  stale state
+  updating state in react is asynchronous 
+  updated state is only available after the rerendere
+
+//////////////////////////
+/// HOW EVENTS WORK IN REACT
+
+  Event: event object is created in the root of the doucment. 
+
+  Capturing phase: event object travels the dom tree to the element on which the event happend 
+
+  Bubbling phase: after the element is found , the event moves upwards to the root , it traverse all the components , 
+
+  but if one of the parent have the same event in it , it will also get executed. 
+
+  to stop this we use e.stopPropagation() 
+
+  Behind the secens react do event delegations
+
+//////////////////////////
+/// What is React
+
+Frameworks = everything is available and we have no freedom of choosing any thing.
+
+Libarary = We have to choose one by one what we want , we have freedom , but have to do the work of finding. 
+
+React is a library
+
+Angular Veu is a Framework
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
