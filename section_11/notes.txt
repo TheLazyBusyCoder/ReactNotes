@@ -188,13 +188,13 @@
 //////////////////////////
 /// What is React
 
-Frameworks = everything is available and we have no freedom of choosing any thing.
+  Frameworks = everything is available and we have no freedom of choosing any thing.
 
-Libarary = We have to choose one by one what we want , we have freedom , but have to do the work of finding. 
+  Libarary = We have to choose one by one what we want , we have freedom , but have to do the work of finding. 
 
-React is a library
+  React is a library
 
-Angular Veu is a Framework
+  Angular Veu is a Framework
 
 
 
