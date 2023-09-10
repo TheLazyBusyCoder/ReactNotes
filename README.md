@@ -62,11 +62,28 @@
   </p>
   <h1>Section 8 (project) (not done)</h1>
   <h1>Section 10</h1>
-  <li>How to determine component size</li>
-  <li>Prop Drilling</li>
-  <li>Component Composition</li>
-  <li>Reusable component using CC</li>
-  <li>Hover Effect</li>
-  <li>Props as an Component API</li>
-  <li>PropTypes</li>
+  <p>
+    <ul>
+      <li>How to determine component size</li>
+      <li>Prop Drilling</li>
+      <li>Component Composition</li>
+      <li>Reusable component using CC</li>
+      <li>Hover Effect</li>
+      <li>Props as an Component API</li>
+      <li>PropTypes</li>
+    </ul>
+  </p>
+  <h1>Section 11</h1>
+  <p>
+    <ul>
+      <li>How react works behind the scene</li>
+      <li>Render Phase</li>
+      <li>Key Prop</li>
+      <li>Rules for render logic</li>
+      <li>State update batching</li>
+      <li>How events work in react</li>
+      <li>What is react4</li>
+    </ul>
+  </p>
+
 </div>
