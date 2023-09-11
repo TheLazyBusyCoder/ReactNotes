@@ -181,43 +181,43 @@
 //////////////////////////
 /// LISTNING TO KEY PRESS
 
-// useEffect() is also called as escap hatch , coz we manipulate dom there. 
+  // useEffect() is also called as escap hatch , coz we manipulate dom there. 
 
-// in the app component 
-useEffect(function() {
-  document.addEventListener('keydown' , function(e) {
-    if(e.code === 'Escape') {
-      handleCloseMovie();
+  // in the app component 
+  useEffect(function() {
+    document.addEventListener('keydown' , function(e) {
+      if(e.code === 'Escape') {
+        handleCloseMovie();
+      }
+    });
+  } , []);
+
+  // now shift this in the WatchMovieDetails 
+  // and we have to pass the function and we need to include that function in the dependency array.
+
+  useEffect(function() {
+    document.addEventListener('keydown' , function(e) {
+      if(e.code === 'Escape') {
+        onCloseMovie();
+      }
+    });
+  } , [onCloseMovie]);
+
+  // now we even have to remove the event listener when the movie details tab is not showing , so we use cleaningup funciton.
+
+  useEffect(function() {
+
+    function thethe(e) {
+      if(e.code === 'Escape') {
+        onCloseMovie();
+      }
     }
-  });
-} , []);
+    document.addEventListener('keydown' , thethe);
 
-// now shift this in the WatchMovieDetails 
-// and we have to pass the function and we need to include that function in the dependency array.
-
-useEffect(function() {
-  document.addEventListener('keydown' , function(e) {
-    if(e.code === 'Escape') {
-      onCloseMovie();
+    return function() {
+      document.removeEventListener('keydown' , thethe);
     }
-  });
-} , [onCloseMovie]);
-
-// now we even have to remove the event listener when the movie details tab is not showing , so we use cleaningup funciton.
-
-useEffect(function() {
-
-  function thethe(e) {
-    if(e.code === 'Escape') {
-      onCloseMovie();
-    }
-  }
-  document.addEventListener('keydown' , thethe);
-
-  return function() {
-    document.removeEventListener('keydown' , thethe);
-  }
-} , [onCloseMovie]);
+  } , [onCloseMovie]);
 
 
 

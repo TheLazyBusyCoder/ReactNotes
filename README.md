@@ -85,5 +85,18 @@
       <li>What is react4</li>
     </ul>
   </p>
+  <h1>Section 12</h1>
+  <p>
+    <ul>
+      <li>Component life cycle</li>
+      <li>useEffect()</li>
+      <li>Loading State</li>
+      <li>Handelling Errors</li>
+      <li>Use effect dependancy arrayd</li>
+      <li>Cleaning function useeffect</li>
+      <li>Cleaning up fetch request</li>
+      <li>Listning to key press</li>
+    </ul>
+  </p>
 
 </div>
