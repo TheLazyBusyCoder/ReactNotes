@@ -96,7 +96,7 @@
       <li>Cleaning function useeffect</li>
       <li>Cleaning up fetch request</li>
       <li>Listning to key press</li>
-      <li><strong style="color: red">Challange not done</strong></li>
+      <li><span style="color: red">Challange not done</span></li>
     </ul>
   </p>
 
