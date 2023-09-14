@@ -99,5 +99,17 @@
       <li><span style="color: red">Challange not done</span></li>
     </ul>
   </p>
+  <h1>Section 13</h1>
+  <p>
+    <ul>
+      <li>Hooks</li>
+      <li>Lazy initial state</li>
+      <li>Selecting dom elements in react</li>
+      <li>Ref hook</li>
+      <li>Using ref's to precest data</li>
+      <li>Custom Hooks</li>
+      <li>Functional Chaning :)</li>
+    </ul>
+  </p>
 
 </div>

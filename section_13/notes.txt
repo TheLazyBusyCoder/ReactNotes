@@ -1,0 +1,247 @@
+//////////////////////////
+/// HOOKS
+
+  // starts with use 
+
+  // React has 20 hooks 
+    useState()
+    useEffect()
+    useReducer()
+    useContext()
+    useRef()
+    useCallback()
+    useMemo()
+    useTransition()
+    useDeferredValue()
+
+  // Hooks can only be called at top level not in { if else , loops , nested functions}
+
+  // Hooks can only be called from React Functions. { Component , custom hook }
+
+  // Hooks rely on call order
+
+  // Fiber tree node has a linked list which stores states data. 
+  // It means states are conntected with each other with linked list. if the state is not in the top level , and is inside a if else , some times condition might be false , and one of the states would be not initilized , so in this situation linked list gets distoried. 
+
+//////////////////////////
+/// LAZY INITIAL STATE
+
+  // Initializing state with a callback. 
+
+    localStorage.setItem("watched", JSON.stringify([...watched, movie])); // because the updating of state is asynchronous
+
+  // use state also accept a call back function to store the value. 
+  useState(function() {
+    return someValue; 
+  })
+
+  // The watched state will be inilizi.... through this funciton
+  const [watched, setWatched] = useState(function () {
+    return JSON.parse(localStorage.getItem("watched"));
+  });
+
+//////////////////////////
+/// SELECTING DOM ELEMENTS IN REACT
+
+  normal way of doing things (not good as react is declerative)
+  useEffect(function() {
+    const el = document.querySelector('.className'):
+    el.focus(); 
+  })
+
+//////////////////////////
+/// REF HOOK
+
+  cost myRef = useRef(23);
+
+  myRef.current -> to use the ref. 
+
+  // values are presestant over multipel renders.
+
+  // 1. to store the previous state. 
+  // 2. setTimeout id. 
+  // 3. select and store dom elements.
+  
+  // Ref's are for the data that is NOT rendered. usually only appears in event handlers or effects , not in JSX
+
+  // Do not read and write .current property in render logic.
+
+  Ref vs State => if you update State it will cause rerender.
+  if you update Ref it will not cause rerender.
+
+  // using ref to SELECT DOM element and perform operation 
+  const inputEl = useRef(null);
+
+  useEffect(function () {
+    inputEl.current.focus();
+  }, []);
+
+  // directly on the component 
+  ref={inputEl}
+
+  // EXAMPLE: 
+  function SearchBar({ query, setQuery }) {
+    const inputEl = useRef(null);
+    useEffect(
+      function () {
+        //* if the current focused element is same as inputEl.current
+        if (document.activeElement === inputEl.current) return;
+        function current(e) {
+          if (e.code === "Enter") {
+            inputEl.current.focus();
+            setQuery("");
+          }
+        }
+        document.addEventListener("keydown", current);
+        return () => document.removeEventListener("keydown", current);
+      },
+      [setQuery]
+    );
+
+    return (
+      <input
+        className="search"
+        type="text"
+        placeholder="Search movies..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        ref={inputEl}
+      />
+    
+//////////////////////////
+/// USING REF'S TO PERCEST DATA BETWEEN RENDERS. 
+
+  const counter = useRef(0);
+
+  // we are not allowed to mutate ref in render logic. so we use effect 
+
+  const countRef = useRef(0);
+
+  useEffect(
+    function () {
+      countRef.current = countRef.current + 1;
+    },
+    [userRating]
+  );
+
+//////////////////////////
+/// CUSTOM HOOKS
+
+  // reuse: 1. UI (Componen) 2. LOGIC (1. no hook (normal function) 2. yes hook (custom hook) )
+  // coustom hooks that we can create and use in multiple projects. 
+  // custom hooks uses regular hooks 
+
+  // custom hooks is a normal function which returns [] or {} and wich uses 1 or more default hooks 
+  // name should start with useName..
+
+  EXAMPLE: 
+
+  function useFetch(url) {
+    const [data , setData] = useState([]);
+    const [isLoading , setIsLoading] = useState(false);
+
+    useEffect(function() {
+      fetch(url).then((res) => res.json()).then((res) => setData(res))
+    } , []);
+
+    return [data , isLoading];
+  }
+
+  // RULES: 
+  // 1. If we want to use same functionality in different part of the code. 
+  // 2. if we want to minimize a hug part of code. 
+
+
+  // create a new file. 
+  useMovies.js 
+
+                  import { useState, useEffect } from "react";
+
+                  const KEY = "1aff8564";
+
+                  export function useMovies(query) {
+                    const [movies, setMovies] = useState([]);
+                    const [isLoading, setIsLoading] = useState(false);
+                    const [error, setError] = useState("");
+                    useEffect(
+                      function () {
+                        const controller = new AbortController();
+
+                        async function getMovie() {
+                          try {
+                            setIsLoading(true);
+                            setError("");
+                            const res = await fetch(
+                              `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+                              {
+                                signal: controller.signal,
+                              }
+                            );
+                            if (!res.ok) throw new Error("Somthing went wrong :(");
+                            const data = await res.json();
+                            if (data.Response === "False") throw new Error("Movie not found");
+                            setMovies(data.Search);
+                            setError("");
+                          } catch (err) {
+                            if (err.name !== "AbortError") setError(err.message);
+                          } finally {
+                            setIsLoading(false);
+                          }
+                        }
+
+                        if (query.length < 3) {
+                          setMovies([]);
+                          setError("");
+                          return;
+                        }
+
+                        getMovie();
+
+                        return function () {
+                          controller.abort();
+                        };
+                      },
+                      [query]
+                    );
+
+                    return { movies, error, isLoading };
+                  }
+
+  App.js
+    // inside App()
+    const { movies, isLoading, error } = useMovies(query);
+
+  EXAMPLE2: 
+
+          import { useState, useEffect } from "react";
+
+          export function useLocalStorageState(initialState, key) {
+            const [value, setValue] = useState(function () {
+              const data = localStorage.getItem(key);
+
+              return data ? JSON.parse(data) : initialState;
+            });
+
+            useEffect(
+              function () {
+                localStorage.setItem(key, JSON.stringify(value));
+              },
+              [value, key]
+            );
+
+            return [value, setValue];
+          }
+
+//////////////////////////
+/// FUNCTIONAL CHANING
+
+  // functionName?.()
+
+
+
+
+
+
+
+
+
