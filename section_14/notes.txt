@@ -1,0 +1,52 @@
+//////////////////////////
+/// OLD WAY OF CREATING COMPONENTS 
+
+  // using classes + using states. 
+
+              import React from "react";
+
+              class Counter extends React.Component {
+                constructor(props) {
+                  super(props);
+                  this.state = { count: 1 };
+                }
+                render() {
+                  return <div>{this.state.count}</div>;
+                }
+              }
+              export default Counter;
+
+  // Adding Event handlears
+
+            import React from "react";
+
+            class Counter extends React.Component {
+              constructor(props) {
+                super(props);
+                this.state = { count: 1 };
+                this.handleDecrement = this.handleDecrement.bind(this);
+              }
+
+              handleDecrement() {
+                console.log(this);
+              }
+
+              render() {
+                return (
+                  <div>
+                    <button onClick={this.handleDecrement}>-</button>
+                    {this.state.count}
+                    <button>+</button>
+                  </div>
+                );
+              }
+            }
+            export default Counter;
+
+
+  // Updating a state in a handler function 
+                handleDecrement() {
+                  this.setState((currState) => {
+                    return { count: currState - 1 };
+                  });
+                }

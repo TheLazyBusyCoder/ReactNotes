@@ -82,7 +82,7 @@
       <li>Rules for render logic</li>
       <li>State update batching</li>
       <li>How events work in react</li>
-      <li>What is react4</li>
+      <li>What is react</li>
     </ul>
   </p>
   <h1>Section 12</h1>
@@ -111,5 +111,19 @@
       <li>Functional Chaning :)</li>
     </ul>
   </p>
+  <h1>Section 14 (Optional) (not done)</h1>
+  <p>
+    <ul>
+      <li>Old way of react using clsses</li>
+    </ul>
+  </p>
 
+  <h1>Section 16 (React Quize App)</h1>
+  <p>
+    <ul>
+      <li>Use Reducer Hook</li>
+      <li>All about useReducer() </li>
+      <li>How to set Timer in useEffect()</li>
+    </ul>
+  </p>
 </div>
