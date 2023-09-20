@@ -126,4 +126,22 @@
       <li>How to set Timer in useEffect()</li>
     </ul>
   </p>
+  <h1>Section 17</h1>
+  <p>
+    <ul>
+      <li>React Roter</li>
+      <li>Vite</li>
+      <li>React Router and SPA</li>
+      <li>Creating Routes</li>
+      <li>Linking Routes</li>
+      <li>Creating Common Components</li>
+      <li>Styling Opetions in React</li>
+      <li>Using Styles</li>
+      <li>Nested Routers , Index Route</li>
+      <li>Storing State in URL</li>
+      <li>Dynamic routes with url parameters</li>
+      <li>Setting a query string</li>
+      <li>Programatically navagating</li>
+    </ul>
+  </p>
 </div>
