@@ -1,0 +1,443 @@
+//////////////////////////
+/// CONTEXT API
+
+  // advance state managment. 
+  // context api solve's the problem of prop drilling.
+  // passing the state from the parent to the child directly without propdrilling and without component composition 
+
+  // provider can sit any where in the tree. but 
+  // Provider: sit's at the top of component tree and provides values to the children's 
+  // Value: value that we want to broadcast (states , functions)
+  // Consumers: all coponents that reads the provider context value.
+
+  // if the value changes , is updated the consumers (Component) rerenders. 
+
+//////////////////////////
+/// CREATING THE CONTEXT
+
+  // app.js
+  1. const PostComponent = createContext();
+
+  // inside return of App()
+  2.   <PostContex.Provider value={{
+    posts: searchedPosts,
+    onAddPost: handleAddPost,
+    onClearPost: handleClearPosts,
+  }}>
+    ...  Everything will come inside this. 
+  </PostContext.Provider>
+
+  // Each context should be domain specific , ex: postcontext and searchcontext
+
+    <PostContex.Provider
+        value={{
+          posts: searchedPosts,
+          onAddPosts: handleAddPost,
+          onClearPost: handleClearPosts,
+          searchQuery,
+          setSearchQuery,
+        }}
+      >
+
+//////////////////////////
+/// CONSUMIG THE CONTEXT VALUE.
+
+  // inside the component , that needs the states. 
+  // this object has all the data of states that we made. 
+  const x = useContext(PostContext);
+    const {onClearPosts} = useContext();  // we destructure that object , to the data we want. 
+
+  // we remove the props drilling then we use this. its easy.
+
+  // ezy , basically it makes component independent , 
+
+//////////////////////////
+/// ADVANCE PATTERN
+
+  // using custom context provider component. 
+  // different parts in different files. 
+  // Refactering
+
+  1. Create new file PostContext.js
+  2. Move everything related to it , to js file. 
+  3. function PostProvider() {}
+
+  // Understand this :)
+
+  PostContext.js
+    import { createContext, useState } from "react";
+    import { faker } from "@faker-js/faker";
+
+    const PostContex = createContext();
+
+    function createRandomPost() {
+      return {
+        title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
+        body: faker.hacker.phrase(),
+      };
+    }
+
+    function PostProvider({ children }) {
+      const [posts, setPosts] = useState(() =>
+        Array.from({ length: 30 }, () => createRandomPost())
+      );
+      const [searchQuery, setSearchQuery] = useState("");
+
+      // Derived state. These are the posts that will actually be displayed
+      const searchedPosts =
+        searchQuery.length > 0
+          ? posts.filter((post) =>
+              `${post.title} ${post.body}`
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
+            )
+          : posts;
+
+      function handleAddPost(post) {
+        setPosts((posts) => [post, ...posts]);
+      }
+
+      function handleClearPosts() {
+        setPosts([]);
+      }
+
+      return (
+        <PostContex.Provider
+          value={{
+            posts: searchedPosts,
+            onAddPost: handleAddPost,
+            onClearPost: handleClearPosts,
+            searchQuery,
+            setSearchQuery,
+          }}
+        >
+          {children}
+        </PostContex.Provider>
+      );
+    }
+
+    export { PostContex, PostProvider };
+
+  App.js
+    import { useContext, useEffect, useState } from "react";
+    import { faker } from "@faker-js/faker";
+    import { PostContex, PostProvider } from "./PostContext";
+
+    function createRandomPost() {
+      return {
+        title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
+        body: faker.hacker.phrase(),
+      };
+    }
+
+    function App() {
+      const [isFakeDark, setIsFakeDark] = useState(false);
+
+      // Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
+      useEffect(
+        function () {
+          document.documentElement.classList.toggle("fake-dark-mode");
+        },
+        [isFakeDark]
+      );
+
+      return (
+        <section>
+          <button
+            onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
+            className="btn-fake-dark-mode"
+          >
+            {isFakeDark ? "☀️" : "🌙"}
+          </button>
+
+          <PostProvider>
+            <Header />
+            <Main />
+            <Archive />
+            <Footer />
+          </PostProvider>
+        </section>
+      );
+    }
+
+    function Header() {
+      const { onClearPosts } = useContext(PostContex);
+      return (
+        <header>
+          <h1>
+            <span>⚛️</span>The Atomic Blog
+          </h1>
+          <div>
+            <Results />
+            <SearchPosts />
+            <button onClick={onClearPosts}>Clear posts</button>
+          </div>
+        </header>
+      );
+    }
+
+    function SearchPosts() {
+      const { searchQuery, setSearchQuery } = useContext(PostContex);
+      return (
+        <input
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search posts..."
+        />
+      );
+    }
+
+    function Results() {
+      const { posts } = useContext(PostContex);
+      return <p>🚀 {posts.length} atomic posts found</p>;
+    }
+
+    function Main() {
+      return (
+        <main>
+          <FormAddPost />
+          <Posts />
+        </main>
+      );
+    }
+
+    function Posts() {
+      return (
+        <section>
+          <List />
+        </section>
+      );
+    }
+
+    function FormAddPost() {
+      const { onAddPost } = useContext(PostContex);
+      const [title, setTitle] = useState("");
+      const [body, setBody] = useState("");
+
+      const handleSubmit = function (e) {
+        e.preventDefault();
+        if (!body || !title) return;
+        onAddPost({ title, body });
+        setTitle("");
+        setBody("");
+      };
+
+      return (
+        <form onSubmit={handleSubmit}>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Post title"
+          />
+          <textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Post body"
+          />
+          <button>Add post</button>
+        </form>
+      );
+    }
+
+    function List() {
+      const { posts } = useContext(PostContex);
+      return (
+        <ul>
+          {posts.map((post, i) => (
+            <li key={i}>
+              <h3>{post.title}</h3>
+              <p>{post.body}</p>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    function Archive() {
+      // Here we don't need the setter function. We're only using state to store these posts because the callback function passed into useState (which generates the posts) is only called once, on the initial render. So we use this trick as an optimization technique, because if we just used a regular variable, these posts would be re-created on every render. We could also move the posts outside the components, but I wanted to show you this trick 😉
+      const [posts] = useState(() =>
+        // 💥 WARNING: This might make your computer slow! Try a smaller `length` first
+        Array.from({ length: 10000 }, () => createRandomPost())
+      );
+
+      const [showArchive, setShowArchive] = useState(false);
+      const { onAddPost } = useContext(PostContex);
+      return (
+        <aside>
+          <h2>Post archive</h2>
+          <button onClick={() => setShowArchive((s) => !s)}>
+            {showArchive ? "Hide archive posts" : "Show archive posts"}
+          </button>
+
+          {showArchive && (
+            <ul>
+              {posts.map((post, i) => (
+                <li key={i}>
+                  <p>
+                    <strong>{post.title}:</strong> {post.body}
+                  </p>
+                  <button onClick={() => onAddPost(post)}>Add as new post</button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </aside>
+      );
+    }
+
+    function Footer() {
+      return <footer>&copy; by The Atomic Blog ✌️</footer>;
+    }
+
+    export default App;
+
+  // To understand read PostContext. 
+  // then in side App.js
+
+  import {PostProvider , PostContext} from '....'
+
+  <PostProvider>
+    .. all the child component that needs the states etc.
+  </PostProvider>
+
+  // we shifted all the state logic in the PostProvider function
+
+//////////////////////////
+/// CUSTOM HOOK 
+
+  // so to not use useContext(); lot of times. 
+
+  // PostContext.js
+  function usePosts() {
+    const context = useContext(PostContex);
+    return context;
+  }
+
+  export { PostProvider, usePosts };
+
+  import { PostProvider, usePosts } from "./PostContext";
+
+  const { onAddPost } = usePosts();
+
+  // now we dont need to store the PostContext in our App file , (simple API)
+
+  function usePosts() {
+    const context = useContext(PostContex);
+    if (context === undefined)
+      throw new Error("Post was used outside of the postProvider");
+    return context;
+  }
+  // so that if a user tries to use the usePosts outside of the scope we throw new error
+
+//////////////////////////
+/// ADVANCE STATE MANAGMENT
+
+  1. local component
+  2. Parent coponent
+  3. Context + useState + useReducer
+  4. 3rd Party library's (Global state) (UI or Remote)
+  5. Url
+  6. Browser (useLocalStorage , session Storage)
+
+  // In larger applicatin we treet all the Remote state as Global state.
+
+  // visit the WorldWise project for a good example and use of state managment. 
+
+//////////////////////////
+/// USING LEAFLET
+
+  npm install react-leaflet leaflet
+
+  // in the global css. 
+  @import "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css";
+
+  // inside the div of Map.jsx
+    <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Marker position={position}>
+            <Popup>
+              A pretty CSS3 popup. <br /> Easily customizable.
+            </Popup>
+          </Marker>
+        </MapContainer>
+
+  // V1 of that Map component 
+    function Map() {
+      const [searchParams, setSearchParams] = useSearchParams();
+      const lat = searchParams.get("lat");
+      const lng = searchParams.get("lng");
+      const [mapPosition, setMapPosition] = useState([40, 0]);
+
+      const navigate = useNavigate();
+
+      return (
+        <div className={styles.mapContainer} onClick={() => navigate("form")}>
+          <MapContainer
+            center={mapPosition}
+            zoom={13}
+            scrollWheelZoom={true}
+            className={styles.map}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+            />
+            <Marker position={mapPosition}>
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker>
+          </MapContainer>
+        </div>
+      );
+    }
+
+
+//////////////////////////
+/// REACT DATE PICKER
+
+  npm install react-datepicker
+
+//////////////////////////
+/// TO UPLOAD DATA TO THAT FAKE JSON SERVER.
+
+  const res = await fetch('url' , {method: post , body: JSON.stringify(obj) , 
+  headers: {
+    "Context-Type": "application/json",
+  }
+  });
+
+
+//////////////////////////
+/// CONTEXT API + REDUCER
+
+  // Its just refactoring.
+  // use the useReducre hook in the Context file , 
+
+  // very hard , just understand from the code. (final of wroldwise)
+
+
+//////////////////////////
+/// USER AUTHENTATION. 
+
+1. get the email and pass , 
+2. check the email and pass with an api 
+3. route the user to the link and store the info in the state. 
+4. protect the app from unauthorised access. 
+
+// to replace the history stack , and user data should be gon once the user click back. 
+      if (isAuthenticated) navigate("/app", { replace: true });
+
+
+// protect the route.
+
+// create a page , that will help .
+// it will recieve the children  
+// use context in it to check if the user is authenticated. 
+// rap our application inside this componnet. 
+
+// ex: <pro> AppLayout </pro>
+
