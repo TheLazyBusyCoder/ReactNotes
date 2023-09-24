@@ -152,4 +152,16 @@
       <li>User Authentation</li>
     </ul>
   </p>
+  <h1>Sectino 19</h1>
+  <p>
+    <ul>
+      <li>All About Performance Optimizatino</li>
+      <li>Profiler</li>
+      <li>Memo</li>
+      <li>useMemo</li>
+      <li>useCallback</li>
+      <li>Optimizing bundle size</li>
+      <li>Stail closers</li>
+    </ul>
+  </p>
 </div>

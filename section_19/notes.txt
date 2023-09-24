@@ -1,0 +1,285 @@
+//////////////////////////
+/// PERFORMACE OPTIMIZATION
+
+  // analyzing wasted renders. 
+
+  1. Prevent Wasted renders. 
+    memo 
+    - useMemo() hook 
+    - useCallback() hook
+    - passing elements as children or reqular prop
+
+  2. imporve app speed/responsiveness.
+    - useMemo()
+    - useCallback()
+    - useTransition()
+
+  3. Reduced bundle size.
+    - minimize 3rd party library's 
+    - code splitting and lazy loading.
+
+  //Q When a component gets rerendered. 
+  (Updating props => component does not rerenders.)
+  1. When the component's state changes. 
+  2. When context changes that the component is subscribed to.
+  3. Parent component rerenders. 
+
+  // wasted renders: Render that doest make any changes to the DOM, (normally render dosent mean updating the dom , it means we have chanaged the Virtual Dom and all that reconcilation. ) 
+
+//////////////////////////
+/// PROFILER REACT TOOL 
+
+  // We can analyse renders. 
+
+  // gray one dosent re-rendered. 
+  // more yellow more time it took to render.
+
+//////////////////////////
+/// 1 TIP
+
+  // slow component. 
+    function SlowComponent() {
+      // If this is too slow on your maching, reduce the `length`
+      const words = Array.from({ length: 100_000 }, () => "WORD");
+      return (
+        <ul>
+          {words.map((word, i) => (
+            <li key={i}>
+              {i}: {word}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+  // this coponent rerenders as count changes , 
+    function Test() {
+      const [count, setCount] = useState(0);
+      return (
+        <div>
+          <h1>Slow counter?!?</h1>
+          <button onClick={() => setCount((c) => c + 1)}>Increase: {count}</button>
+          <SlowComponent />
+        </div>
+      );
+    }
+
+  1. You have 1 component that rerenders , and inside it , you have a component that renders very slowely , you use this trick. 
+
+  // AFTER
+    function Counter({ children }) {
+      const [count, setCount] = useState(0);
+      return (
+        <div>
+          <h1>Slow counter?!?</h1>
+          <button onClick={() => setCount((c) => c + 1)}>Increase: {count}</button>
+          {children}
+        </div>
+      );
+    }
+
+    function SlowComponent() {
+      // If this is too slow on your maching, reduce the `length`
+      const words = Array.from({ length: 100_000 }, () => "WORD");
+      return (
+        <ul>
+          {words.map((word, i) => (
+            <li key={i}>
+              {i}: {word}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    function Test() {
+      return (
+        <Counter>
+          <SlowComponent />
+        </Counter>
+      );
+    }
+
+//////////////////////////
+/// MEMO
+
+  Memoization: We call a function , it executes and stores the result in memory, then when we put same input to the function it give output from the cache. 
+
+  1. Memoize components with memo.
+  2. Memoize objects with useMemo.
+  3. Memoize functions with useCallback
+
+  Memo: A component that doest rerender with the parent rerenders (props will be same.)
+
+  Which component to make memo component?
+  -> A component that takes a lot of to rerender as its parent component renders. 
+
+  const Component memo(<Component />);
+
+  ex: const Archive = memo(function Archive({ show }) {
+
+  DONE!!
+
+  // When we pass an object to Archive ,  it rerenders. 
+  because in react , if a component rerenders , component get new function and new object , even if the object is same , that why it happens.
+
+  //solution: useMemo() to memoise objects , useCallback() to memoize functions.
+
+  this also have dependency array like useEffect. 
+
+  One more use of Memo: // Memoizing: store hard calculations for speed. 
+
+//////////////////////////
+/// USEMEMO
+
+  const obj = {
+      show: false,
+    };
+
+  // empty array: obj will be calculated only once. 
+    const obj = useMemo(() => {
+      return {
+        show: false,
+      };
+    }, []); 
+
+  // if we use a state.
+    const obj = useMemo(() => {
+      return {
+        title: `THis is somthing ${aStateVariable}`,
+        show: false,
+      };
+    }, [aStateVariable]); 
+
+//////////////////////////
+/// USECALLBACK
+
+    const handleAddPost = useCallback(function handleAddPost(post) {
+      setPosts((posts) => [post, ...posts]);
+    }, []);
+
+  then if we pass the function to the componet , it will not rerendured. 
+
+  useState() => setVariable -> function -> always memosized.
+
+//////////////////////////
+/// OPTMIZING RERENDERS FROM COTEXT
+
+  // when to do this?
+  1. the state in the context changes very frequently 
+  2. there are a lot of consumers. 
+  3. the app is laggi
+
+
+  // Why to do this . 
+  The object we are using in the value={} is an object , and provider is an component , so a render in the Provider component will make all the child rerender , coz it has new object. 
+
+  // we memoize , that object.
+
+      <PostContex.Provider
+        value={{
+          posts: searchedPosts,
+          onAddPost: handleAddPost,
+          onClearPost: handleClearPosts,
+          searchQuery,
+          setSearchQuery,
+        }}
+      >
+
+    const value = useMemo(() => {
+      return {
+        posts: searchedPosts,
+        onAddPost: handleAddPost,
+        onClearPost: handleClearPosts,
+        searchQuery,
+        setSearchQuery,
+      };
+    }, [searchQuery, searchedPosts]);
+
+
+  // Whenever we update 1 thing in the context , all component that is using that context , gets updated. 
+  // that's why we create per state 1 context. 
+  // this is seperation of cencerns. 
+  // use multiple Context. 
+
+//////////////////////////
+/// OPTIMIZING BUNDLE SIZE
+
+  Bundle: A js file that contains all the code.
+  Bundle size: Amount of js user has to download.
+
+  Solution: Code spllition (lazy loading) so that content , 
+    in place of 1 big js file , we have multiple files , so that the user download necessary file as needed.
+
+  // Split the code in the route level (page level)
+  // Each component that represents a page , loads seperatily 
+
+  // any coponent can be lazy loaded. 
+
+  ==> 
+  Dont use normal imports. 
+  insted use: 
+
+  // dynamic imports should be at the end.
+
+  const Homepage = lazy(() => import('path/to/Component')) 
+
+  // While this pages are loaded in the background we want to show loading spinner.
+
+  import {Suspence} from "react";
+
+  // this at the top level of our app. ( Above all the routes basically )
+  <Suspence fallback={<FullPageCompoent />} />
+    ... rest of the component. 
+  </Suspence>
+
+  // lazy loads only one time , it dosent download again and again . 
+
+//////////////////////////
+/// USEEFFECT RULES
+
+  1. every thing we are using in the effect should be included in the dependency array.
+  2. do not include array and object in the dependency array.
+
+  // If your are using a function inside an effect , just move that funciton inside the effect. 
+
+  // if that function is needed in other places use useCallback() to memoize that function.
+
+  // if the function dosent use reactive value , move it ouside the component. 
+
+  // insted of object , pass properties of object in the dependency array.
+
+  // other wise memo the object. 
+
+  Where not to use effect. 
+  - fetching value from the API (good for small) , insted use React Query.
+
+
+// export default memo(ComponentFunction);
+
+// To play audio file.
+import soundFile from "./Location/of/sound/file";
+
+const playSound = function() {
+  if(!allowSound) return;
+  const sound = new Audio(soundFile);
+  sound.play();
+}
+
+// if you want to do somthing when a state changes , use useEffect , its the better way to synchronising your states. 
+
+//////////////////////////
+/// Stail Closers in useEffect.
+
+// Hooks relay heavely on javascript closers. 
+
+// stail closers = outdated closers.
+ex: 
+
+useEffect(function() {
+  console.log(aStateVariable);
+} , [])
+
+// as the dependency array is empty , the function will be created only once, so if the aStateVAriable changes to a new value the function will have the old value , this is stail closers. 
+
+
+
