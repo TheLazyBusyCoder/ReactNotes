@@ -1,5 +1,5 @@
 //////////////////////////
-/// CONTEXT API
+/// CONTEXT API (theory)
 
   // advance state managment. 
   // context api solve's the problem of prop drilling.
@@ -44,6 +44,7 @@
 
   // inside the component , that needs the states. 
   // this object has all the data of states that we made. 
+  
   const x = useContext(PostContext);
     const {onClearPosts} = useContext();  // we destructure that object , to the data we want. 
 

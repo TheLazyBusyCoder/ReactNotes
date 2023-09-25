@@ -270,16 +270,16 @@ const playSound = function() {
 //////////////////////////
 /// Stail Closers in useEffect.
 
-// Hooks relay heavely on javascript closers. 
+  // Hooks relay heavely on javascript closers. 
 
-// stail closers = outdated closers.
-ex: 
+  // stail closers = outdated closers.
+  ex: 
 
-useEffect(function() {
-  console.log(aStateVariable);
-} , [])
+  useEffect(function() {
+    console.log(aStateVariable);
+  } , [])
 
-// as the dependency array is empty , the function will be created only once, so if the aStateVAriable changes to a new value the function will have the old value , this is stail closers. 
+  // as the dependency array is empty , the function will be created only once, so if the aStateVAriable changes to a new value the function will have the old value , this is stail closers. 
 
 
 

@@ -164,4 +164,16 @@
       <li>Stail closers</li>
     </ul>
   </p>
+  <h1>Sectino 20</h1>
+  <p>
+    <ul>
+      <li>All About Redux</li>
+      <li>Old way of using Redux</li>
+      <li>Tunks</li>
+      <li>Morden way</li>
+      <li>Slice</li>
+      <li>Tunks</li>
+      <li>Comparison</li>
+    </ul>
+  </p>
 </div>
