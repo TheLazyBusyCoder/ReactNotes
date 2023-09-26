@@ -1,0 +1,12 @@
+//////////////////////////
+/// REACT ROUTER + DATA LOADING
+
+npm create vite@latest
+npm install 
+
+setup vite section 17
+
+//////////////////////////
+/// PLANNING
+
+  planning.txt

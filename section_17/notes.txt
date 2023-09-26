@@ -328,7 +328,6 @@
     const x = useParams();
     console.log(x);
 
-
 //////////////////////////
 /// SETTING A QUERY STRING
 

@@ -230,6 +230,129 @@
 
       dispatch(createCustomer(fullName , nationalID));
 
+//////////////////////////
+/// OLD WAY OF REDUX (DEAD) V1
+
+  1. initial state. 
+    const initialState = {
+      balance: 0,
+      loan: 0,
+      whyLoad: "",
+    };
+  2. reducer funciton
+    function reducer(state = initialState, action) {
+      switch (action.type) {
+        case "account/deposit":
+          return { ...state, balance: state.balance + action.payload };
+        case "account/withdraw":
+          return { ...state, balance: state.balance - action.payload };
+        case "account/requestLoan":
+          if (state.loan > 0) return state;
+          return {
+            ...state,
+            loan: action.payload.amount,
+            whyLoan: action.payload.purpose,
+            balance: state.balance + action.payload.amount,
+          };
+        case "account/payLoan":
+          return {
+            ...state,
+            loan: 0,
+            whyLoan: "",
+            balance: state.balance - state.loan,
+          };
+        default:
+          return state;
+      }
+    }
+  3. create store
+    npm install redux
+    import { createStore } from "redux";
+    const store = createStore(reducer);
+    store.dispatch({ type: "account/deposit", payload: 500 });  // perform action.
+    store.getState(); //get state data. 
+  4. create action creators. 
+    function deposit(amount) {
+      return {
+        type: "account/deposit",
+        payload: amount,
+      };
+    }
+
+    function withdraw(amount) {
+      return {
+        type: "account/widthdraw",
+        payload: amount,
+      };
+    }
+
+    function requestLoan(amount, purpose) {
+      return {
+        type: "account/requestLoan",
+        payload: { amount, purpose },
+      };
+    }
+
+    function payLoan() {
+      return {
+        type: "account/payLoan",
+      };
+    }
+
+    store.dispatch(deposit(500)); //using it.
+  5. to create multiple state.
+
+    // every thing is same , but changes in the store code. 
+
+    import {combineReducers} from "redux";
+
+    const rootReducer = combineReducers({
+      account: accountReducer,
+      customer: customerReducer,
+    });
+
+    store = createStore(rootReducer);
+
+    store.dispatch(deposit(500)); // to use it.   
+  6. refactoring 
+
+        folder structure.
+        src
+          features 
+            accounts
+            customers
+
+  // move components to desired location. 
+  // cut paste in accountSlice.js
+
+  1. default export of the reducer function.
+  2. named export of the actionListener's 
+  3. import the reducer in the store.js
+  4. import the actionListeners in the component where you want to use it.
+  5. import the store in the index.js
+  6. connection redux and react app
+
+    npm i react-redux
+
+    // index.js 
+    import {Provider} from 'react-redux';
+
+    // wrap the App component in the <Provider store={store}></Provider>
+  7. read data in the component. 
+
+    import {useSelector} from 'react-redux';
+    const data = useSelector(store => store.customer.name);
+  8. dispatching actions
+
+    // inside the component. 
+    //we get access to dispatch function. 
+    import {useDispatch} from 'react-redux';
+    
+    const dispatch = useDispatch();
+
+    // import actionListoners in the component
+    import {deposit} from './location';
+    dispatch(deposit(500));
 
 //////////////////////////
 /// REDUX MIDDLEWARE AND THUNKS
@@ -268,7 +391,6 @@
 
   // When redux see's that we are dispatching a function , it calls it. 
 
-
 //////////////////////////
 /// REDUX DEV TOOLS
 
@@ -281,7 +403,6 @@
   const store = createStore(rootReducer , composeWithDevTools(appyMiddleware(thunk)))
 
   // use it and learn
-
 
 //////////////////////////
 /// MORDEN WAY OF WRITING REDUX CODE (REDUX TOOLKIT)
@@ -299,6 +420,59 @@
       customer: customerReducer,
     }
   });
+
+//////////////////////////
+/// MORDEN WAY OF WRITING REDUX CODE (REDUX TOOLKIT) V1
+
+  1. store stuff
+    npm install @reduxjs/toolkit
+
+    import {configureStore} from '@reduxjs/toolkit';
+
+    const store = configureStore({
+      reducers: {
+        account: accountReducer,
+        cutomer: customerReducer,
+      }
+    });
+  2. slice. 
+    // in the accountSlice.js
+
+    import {createSlice} from '@reduxjs/toolkit';
+
+    const accountSlice = createSlice({
+      name: 'account',
+      initialState,
+      reducers: {
+        deposit(state , action) {
+          state.balance = state.balance + action.payload;
+        },
+        requestLoan: {
+          prepare(amount , purpose) {
+            return {
+              payload: {amount , purpose}
+            }
+          },
+          reducer(state , action) {
+            ...logic
+          }
+        }
+      }
+    });
+
+    export const {deposit} from accountSlice; 
+
+    export default accoutSlice.reducer;
+  3. thunks?
+
+    rather then exporting { in this} 
+    export function deposit() {
+
+    }
+
+    // overwrite the function and export. 
+
+    // first our outside funciton will run then , our inside function will run. 
 
 
 //////////////////////////
@@ -378,7 +552,6 @@
       type: '' , payload: aaaa,
     })
   }
-
 
 //////////////////////////
 /// CONTEXT API vs REDUX
