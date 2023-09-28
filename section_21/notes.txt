@@ -1,12 +1,390 @@
+# hooks can only be called inside components. 
+
 //////////////////////////
 /// REACT ROUTER + DATA LOADING
 
-npm create vite@latest
-npm install 
+  npm create vite@latest
+  npm install 
 
-setup vite section 17
+  setup vite /'section 17'
 
 //////////////////////////
-/// PLANNING
+/// PLANNING (2023-09-26)
+//////////////////////////
+NOTES:
 
-  planning.txt
+  /planning.txt
+
+//////////////////////////
+/// NEW WAY OF IMPLEMENTING ROUTS (2023-09-28)
+//////////////////////////
+NOTES:
+
+  // new way of fetching data , and new way of submitting form 
+
+  1. install react router
+    npm i react-router-dom 
+
+  2. defining routes (App.jsx)
+
+    import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+    const router = createBrowserRouter([
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/menu",
+        element: <Menu />,
+      },
+    ]);
+
+    function App() {
+      return <RouterProvider router={router} />;
+    }
+
+    EXAMPLE: file_1.js
+
+//////////////////////////
+/// BUILDING APP LAYOUT (2023-09-28)
+//////////////////////////
+NOTES:
+
+  1. creating layout file
+    ui/AppLayout.jsx
+
+  2. deffining layout route
+    // it has no path , and it has children property 
+    {
+      element: <AppLayout />,
+      children: []
+    }
+
+    EXAMPLE:
+
+      const router = createBrowserRouter([
+        {
+          element: <AppLayout />,
+          children: [
+            {
+              path: "/",
+              element: <Home />,
+            },
+            {
+              path: "/menu",
+              element: <Menu />,
+            },
+            {
+              path: "/cart",
+              element: <Cart />,
+            },
+            {
+              path: "/order/new",
+              element: <CreateOrder />,
+            },
+            {
+              path: "/order/:orderId",
+              element: <Order />,
+            },
+          ],
+        },
+      ]);
+
+  3. display child content inside the parent content.
+    import { Outlet } from "react-router-dom";
+    // inside AppLayout
+    <Outlet />
+
+//////////////////////////
+/// FETCHING DATA WITH REACT ROUTER (2023-09-28)
+//////////////////////////
+NOTES:
+
+  1. create the loader
+    // we create the loader for the page inside the componenet file itself.
+    // loader function does the work of async.
+    // Menu.jsx
+    export async function loader() {
+      const menu = await getMenu();
+      return menu;
+    }
+    
+  2. give the data to the component 
+    // in App.jsx
+    import Menu, { loader as menuLoader } from "./features/menu/Menu";
+    // inside the array of createBrowserRouter 
+          {
+            path: "/menu",
+            element: <Menu />,
+            loader: menuLoader,
+          },
+
+  3. getting the data. 
+    import { useLoaderData } from "react-router-dom";
+    function Menu() {
+      const menu = useLoaderData();
+      console.log(menu);
+      return <h1>Menu</h1>;
+    }
+
+  # setting loading indicator.
+
+  1. using useNavigation()
+    // in AppLayout.jsx
+    import { Outlet, useNavigation } from "react-router-dom";
+    const navigation = useNavigation();
+
+    // this object has data about ,  if the page is idle , or if the page is loading etc. 
+
+  2. creating a loading variable so that to display component according to this.
+    const isLoading = navigation.state === "loading";
+
+  3. create a component in ui for loading spinner
+
+  4. inside AppLayout.jsx
+    import Loader from "../ui/Loader";
+    {isLoading && <Loader />}
+
+    ex: 
+
+          function AppLayout() {
+            const navigation = useNavigation();
+            const isLoading = navigation.state === "loading";
+            return (
+              <div>
+                {isLoading && <Loader />}
+                <Header />
+
+                <main>
+                  <Outlet />
+                </main>
+
+                <CartOverview />
+              </div>
+            );
+          }
+
+//////////////////////////
+/// HANDLING ERROR IN REACT ROUTER (2023-09-28)
+//////////////////////////
+NOTES:
+
+  // whenever error happens in the router , insted of showing the main component we can show the error component. 
+
+  // in App.jsx
+  1. set the error element in the parent , as child error will bubble up to parent 
+
+    element: <AppLayout />,
+      errorElement: <Error />,
+      children: [
+
+  2. getting the error inside the error component.
+    // the error component has access to the errors.
+
+    import { useNavigate, useRouteError } from "react-router-dom";
+    const {error} = useRouteError();
+
+    console.log(error.message); 
+
+  # by this our complete AppLayout get replaced by <Error /> 
+  # if we want to add error inside the AppLayout
+
+    // add the errorElement: to the child as well
+    EX: 
+    element: <AppLayout />,
+      errorElement: <Error />,
+      children: [
+        {
+          path: '/some',
+          element: <Some />,
+          errorElement: <Error />
+        }
+
+//////////////////////////
+/// FETCHING ORDERS (2023-09-28)
+//////////////////////////
+NOTES:
+
+  1. create a new component for searching.
+
+    /orders/SearchOrder.jsx
+
+    SearchOrder.jsx:
+            import { useState } from "react";
+            import { useNavigate } from "react-router-dom";
+
+            function SearchOrder() {
+              const [query, setQuery] = useState("");
+              const navigate = useNavigate();
+
+              function handleSubmit(e) {
+                e.preventDefault();
+                if (!query) return;
+                navigate(`/order/${query}`);
+                setQuery("");
+              }
+
+              return (
+                <form onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search for order #"
+                    value={query}
+                  />
+                </form>
+              );
+            }
+
+            export default SearchOrder;
+
+  2. fetching the data. 
+    // inside Order.jsx
+
+    1. create the loader funciton 
+      // now we are getting the data with id , 
+      // we need id to fetch ,
+
+      -> loader function has some data , and inside it there is property params to use to get the params 
+
+      export async function loader({ params }) {
+        const order = await getOrder(params.orderId);
+        return order;
+      }
+
+    2. connect the loader function inside the router
+
+      add the loader: property 
+      also the errorElement: 
+
+    3. use the useLoaderData() hook to get the data in the component.
+
+//////////////////////////
+/// REACT ROUTER ACTIONS (2023-09-28)
+//////////////////////////
+NOTES:
+
+  // Actions are used to
+  // write data or mutate data on the server. 
+
+  1. setting the ui
+    // inside CreateOrder.jsx
+
+    // replace the form component with the react router component. 
+
+      <Form method="POST" action="/order/new" (optionals)>..input fields and all </Form>
+
+  2. create actions like loader (CreateOrder.jsx)
+
+    // this function is the middle man
+    1. action function 
+      export async function action({ request }) {
+        const formData = await request.formData();
+        console.log(formData);
+        return null;
+      }
+
+    2. getting form data
+      // conver the recived formData to object. 
+      const formData = await request.formData();
+      const data = Object.fromEntries(formData);  // all the data from the form is here.
+      console.log(data);
+
+    3. to get access to objects inside the action without it having to be a form element. 
+    
+      // add this element inside the form
+            <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+
+    4. manipulating the data. 
+      Example:
+            export async function action({ request }) {
+              const formData = await request.formData();
+              const data = Object.fromEntries(formData);
+
+              const order = {
+                ...data,
+                cart: JSON.parse(data.cart),
+                priority: data.priority === "on",
+              };
+
+              const res = await createOrder(order); // it returns the newLyCreated Object.
+
+              return redirect(`/order/${res.id}`);  // this will redirect to that desired url
+            }
+
+  3. connect the action.
+    import CreateOrder, {
+      action as createOrderAction,
+    } from "./features/order/CreateOrder";
+
+    {
+      path: "/order/new",
+      element: <CreateOrder />,
+      action: createOrderAction,
+    },
+
+  4. setting the loading
+    const navigation = useNavigation();
+      const isSubmittin = navigation.stat === "submitting";
+          <button disabled={isSubmittin}>Order now</button>
+
+
+//////////////////////////
+/// ERROR HANDLING IN FORM ACTION (2023-09-28)
+//////////////////////////
+NOTES:
+
+
+  1. setting the error in the action function
+
+    const errors = {};
+    if (!isValidPhone(order.phone)) errors.message = "Provide proper phone";
+
+    if (Object.keys(errors).length > 0) return errors;
+
+    const res = await createOrder(order);
+
+    return redirect(`/order/${res.id}`);
+
+  2. getting the error in the component it self as the component and action are connected together.
+
+    import {  useActionData } from "react-router-dom";
+
+    const formErrors = useActionData();
+
+    // to display error in the component.
+    {formErrors?.phone && <p>{formErrors.phone}</p>}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        

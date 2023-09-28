@@ -1,34 +1,119 @@
 //////////////////////////
 /// THINK IN REACT
+/////////////////////////
+NOTES:
+  1. small scale
+    // good for small application's 
 
-1. small scale
-  // good for small application's 
+    1. Break the desired UI into components 
+    2. Build the static version ( no state yet )
+    3. Think about state managment + data flow. 
 
-  1. Break the desired UI into components 
-  2. Build the static version ( no state yet )
-  3. Think about state managment + data flow. 
-
-2. large scale
-  1. gather applications requirements 
-  2. divide application into pages.   
-    // for each page. 
-    - think about the overall and page level UI.
-    - Break the desired UI into components. 
-    - Design and build static version 
-  3. divide the application into feature categories
-    - Think about state managment + data flow
-  4. Decide on what libraries to use (technology decissions)
-
+  2. large scale
+    1. gather applications requirements 
+    2. divide application into pages.   
+      // for each page. 
+      - think about the overall and page level UI.
+      - Break the desired UI into components. 
+      - Design and build static version 
+    3. divide the application into feature categories
+      - Think about state managment + data flow
+    4. Decide on what libraries to use (technology decissions)
 
 //////////////////////////
-/// EXAMPLE:  (fast react pizza)
+/// PLANNING:  (fast react pizza)
+/////////////////////////
+NOTES: 
+  1. REQUIREMENTS: 
 
-1. very simple application where user can order one or more pizzas from a menu
-2. No user Accounts , no Auth (input the name before started using)
-3. Pizza menu is loaded from the api so it changes. 
-4. Users can add multiple pizzas to a CART beforing ordering. 
-5. Ordering requires username , phone , address. 
-6. if possible GPS can be used for additional help to the delivery
-7. User's can mark their order as prority order , so 25% extra money on cart price. 
+    1. very simple application where user can order one or more pizzas from a menu
+    2. No user Accounts , no Auth (input the name before started using)
+    3. Pizza menu is loaded from the api so it changes. 
+    4. Users can add multiple pizzas to a CART beforing ordering. 
+    5. Ordering requires username , phone , address. 
+    6. if possible GPS can be used for additional help to the delivery
+    7. User's can mark their order as prority order , so 25% extra money on cart price. 
+    8. Orders are made by sending a POST request with the (user data + pizza) to an API
+    9. Payments are made on the delivery, no payment processing . 
+    10. Each order will get an unique ID that should be displayed so that the user can use it later to their order with that ID.
+    11. user can also mark their order as pirority also after the order has been placced. 
+
+  2. FEATURE CATOGARIES:
+
+    1. user 
+    2. menu 
+    3. cart 
+    4. order
+
+  3. NECESSARY PAGES: 
+
+    1. Homepage               /home
+    2. Pizza menu             /menu
+    3. cart                   /cart
+    4. placing a new order    /order/new
+    5. look up an order       /order/:orderID
+
+  4. STATE MANAGMENT
+
+    1. User -> Global UI state. (no accounts , so stays in app)
+    2. Menu ->  Global remote state. (menu is fetched from API)
+    3. Cart ->  Global UI state (no need for API, just stored in app) 
+    4. Order ->  Global remote state (fetched and submitted to API)
+
+  5. TECH DECISSIONS
+
+    1. Routing -> React Router
+    2. Styling -> tailwindcss
+    3. State managment:
+      1. Remote state managment -> React Router (react router is able to fetch data right inside of react router)
+        -> render-as-you-fetch  (new)
+        -> fetch-on-render  (old)
+      2. UI state managment-> Redux
+
+//////////////////////////
+/// PROFFECTIONAL FILE STRUCTURE  (2023-09-26)
+//////////////////////////
+NOTES:
+  src/features -> all the features that we mentioned.
+  ui -> reusable components (ex: buttons)
+  services -> reusable code to interact with the API
+  utlis -> some helper function (state less) (no side effect)
+
+  /src
+    /services
+    /ui
+    /utils
+    /features
+      /user
+      /menu
+      /order
+      /cart
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

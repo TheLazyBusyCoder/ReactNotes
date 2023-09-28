@@ -164,7 +164,7 @@
       <li>Stail closers</li>
     </ul>
   </p>
-  <h1>Sectino 20</h1>
+  <h1>Section 20</h1>
   <p>
     <ul>
       <li>All About Redux</li>
@@ -174,6 +174,20 @@
       <li>Slice</li>
       <li>Tunks</li>
       <li>Comparison</li>
+    </ul>
+  </p>
+  <h1>Section 22</h1>
+  <p>
+    <ul>
+      <li>React Router + Data Loading</li>
+      <li>Planning</li>
+      <li>New way  of implementing routes</li>
+      <li>Building app layout</li>
+      <li>Fetching data with react router</li>
+      <li>Handling error in react router</li>
+      <li>Fetching orders</li>
+      <li>React router actions</li>
+      <li>Error handling in actions</li>
     </ul>
   </p>
 </div>
