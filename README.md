@@ -190,4 +190,8 @@
       <li>Error handling in actions</li>
     </ul>
   </p>
+  <h1>Section 23 (tailwind)</h1>
+  <ul>
+    <li>TailWind learning => from documentation</li>
+  </ul>
 </div>

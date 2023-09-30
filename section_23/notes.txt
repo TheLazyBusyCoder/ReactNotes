@@ -1,0 +1,155 @@
+// if the npm run dev , command dosent work. 
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+// learning tailwind is just practice , not knowladge. 
+
+
+//////////////////////////
+/// TAILWIND CSS (2023-09-28)
+//////////////////////////
+
+//////////////////////////
+/// SETTING UP TAILWIND (2023-09-28)
+//////////////////////////
+NOTES:
+
+  // Follow the official documentation. (BEST)
+  https://tailwindcss.com/docs/guides/vite
+
+  1. installing tailwind.
+    npm install -D tailwindcss postcss autoprefixer
+    npx tailwindcss init -p
+
+  2. setting up config file.
+    // inside tailwind.config.js
+
+    /** @type {import('tailwindcss').Config} */
+    export default {
+      content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+      theme: {
+        extend: {},
+      },
+      plugins: [],
+    };
+
+  3. add this to index.css file
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+  4. style the elements with className="" (use tailwind classes)
+
+  5. install the vscode extension of tailwind 
+
+  6. prettier extension with tailwind
+
+    npm install -D prettier prettier-plugin-tailwindcss
+
+    prettier.config.js
+    module.exports = {
+      plugins: ["prettier-plugin-tailwindcss"],
+    };
+
+//////////////////////////
+/// WORKING WITH COLOURS (2023-09-28)
+//////////////////////////
+NOTES:
+
+  // see the documnetation. 
+
+  // Documentation is really important
+
+  // SPACING BOX MODEL 
+
+  space-x-4 => on the parent element , this will add spacing between elements. 
+
+  // display => hidden , block , flex etc. 
+
+  // responsive design
+  
+  Breakpoint prefix	Minimum width	CSS
+  sm	640px	@media (min-width: 640px) { ... }
+  md	768px	@media (min-width: 768px) { ... }
+  lg	1024px	@media (min-width: 1024px) { ... }
+  xl	1280px	@media (min-width: 1280px) { ... }
+  2xl	1536px	@media (min-width: 1536px) { ... }
+
+  Whenever the breakpoint is greater then sm the value will overwright. 
+
+  className="my-10 sm:my-16"  whenever the screen is greater then sm 16 will be used. 
+
+  Default classes are mobile first. 
+
+  // grid layout is used to push items to bottom of the screen and do that stuff :))))))))
+
+  className="gird grid-rows-3 grid-cols-2 gap-x-4 gap-4"
+
+  grid-rows-[auto_1fr_auto]
+
+  h-screen => 100vh
+
+  className="w-28 rounded-full bg-yellow-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring-yellow-500
+          focus:ring-opacity-50 sm:w-64 sm:focus:w-72
+          "
+
+  // learn from this examples :)
+  sm:focus:w-72
+
+  // reusing tailwind classes. 
+
+  // inside index.css
+  @layer components {
+    .input {
+      @apply w-full rounded-full border border-stone-200 px-4 py-2 text-sm transition-all  duration-300 focus:outline-none focus:ring-yellow-500 md:px-6 md:py-3;
+    }
+  }
+
+  // use it 
+
+  className="input"
+
+// Loader
+
+    return (
+      <div
+        className="absolute inset-0 flex
+      items-center justify-center bg-slate-200/20 backdrop-blur-sm"
+      >
+        <div className="loader"></div>
+      </div>
+    );
+
+  theme(colors.stone.800)
+
+
+// To add font faimily.
+// inside tailwind.config.js
+
+  export default {
+    content: [],
+    theme: {
+      fontFamily: {
+        pizza: 'monospace , 'fallback',
+      }
+    }
+  }
+
+  // to use it. 
+
+  className="font-pizza"
+
+
+// new unit 
+
+100dvh <- dynamic view height
+
+// emoji as a fav icon 
+
+<link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>"
+    />
+
+
+
+
