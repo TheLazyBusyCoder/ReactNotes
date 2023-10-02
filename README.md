@@ -194,4 +194,11 @@
   <ul>
     <li>TailWind learning => from documentation</li>
   </ul>
+  <h1>Section 24</h1>
+  <ul>
+    <li>Redux</li>
+    <li>Advance Redux Thunks</li>
+    <li>useFetcher</li>
+    <li>Update data with useFetcher</li>
+  </ul>
 </div>
