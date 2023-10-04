@@ -37,21 +37,67 @@ NOTES:
 //////////////////////////
 NOTES:
 
-npm install @supabase/supabase-js
+  1. setting up supabase and react. 
 
-// new file /src/services/supabase.js
+    1. installing package
+      npm install @supabase/supabase-js
 
-import { createClient } from "@supabase/supabase-js";
+    2. creating supabase.js
 
-const supabaseUrl = "https://glvojjglmjpprpijdupl.supabase.co";
-const supabaseKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdsdm9qamdsbWpwcHJwaWpkdXBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTY0MTc4OTcsImV4cCI6MjAxMTk5Mzg5N30.ORvetd6oHddR2vQxOuEO_nJLd8DbJ6CogobIAzDT-t4";
-const supabase = createClient(supabaseUrl, supabaseKey);
+      // new file /src/services/supabase.js
 
-export default supabase;
+    3. code in supabase.js
+      import { createClient } from "@supabase/supabase-js";
 
-// get the key from the settings/api in supabase website
+      const supabaseUrl = "https://glvojjglmjpprpijdupl.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdsdm9qamdsbWpwcHJwaWpkdXBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTY0MTc4OTcsImV4cCI6MjAxMTk5Mzg5N30.ORvetd6oHddR2vQxOuEO_nJLd8DbJ6CogobIAzDT-t4";
+      const supabase = createClient(supabaseUrl, supabaseKey);
 
+      export default supabase;
+
+      // get the key from the settings/api in supabase website
+
+  2. setting up file to get data. 
+
+    1. creating file to get cabins data: 
+      src/services/apiCabins.js
+
+    2. adding the function 
+      export async function getCabins() {}
+
+    3. from the API documentation get the code to read the data.
+
+      let { data: cabins, error } = await supabase
+        .from('cabins')
+        .select('*')
+
+    4. apiCabins.js
+
+      import supabase from "./supabase";
+
+      export async function getCabins() {
+        const { data, error } = await supabase.from("cabins").select("*");
+        if (error) {
+          console.error(error);
+          throw new Error("problem");
+        }
+
+        return data;
+      }
+
+    5. using 
+
+      import {getCabins} from "../services/apiCabins.js";
+
+      ...code
+      getCabins().then(res => res.json()).then(data => console.log(data));
+      ...code
+
+//////////////////////////
+/// SETTING SUPABASE STORAGE BUCKETS (2023-10-04)
+//////////////////////////
+NOTES:
 
 
 

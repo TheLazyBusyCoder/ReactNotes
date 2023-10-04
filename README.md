@@ -210,4 +210,8 @@
     <li>Creating navigation</li>
     <li>React Icons</li>
   </ul>
+  <h1>Section 26</h1>
+  <ul>
+    <li>All about supabase</li>
+  </ul>
 </div>
