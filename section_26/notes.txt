@@ -1,0 +1,75 @@
+//////////////////////////
+/// SUPA BASE (2023-10-04)
+//////////////////////////
+NOTES:
+
+  // up to 2 projects only
+  // supa base use postgresql behind the screen 
+
+//////////////////////////
+/// MODDLING APPLICATION STATE (2023-10-04)
+//////////////////////////
+NOTES:
+
+  STATES SLICES     FEATURES
+
+  Booking           booking , dashboard , check in check out
+  Cabins            cabins ,  
+  Guests            guests
+  Settings          settings
+  Users             authentation
+
+  // All this state will be global remote state, store with supabase
+  1. supabase
+  2. react query
+
+  // there will be one table for each state "slices" in the database.
+
+  BOOKINGS TABLE
+
+  Guest: id , email , ...
+  Cabin: id , name , ...
+
+  Booking table: id , guestId , cabinId
+
+//////////////////////////
+/// CONNECTION SUPA WITH REACT (2023-10-04)
+//////////////////////////
+NOTES:
+
+npm install @supabase/supabase-js
+
+// new file /src/services/supabase.js
+
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = "https://glvojjglmjpprpijdupl.supabase.co";
+const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdsdm9qamdsbWpwcHJwaWpkdXBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTY0MTc4OTcsImV4cCI6MjAxMTk5Mzg5N30.ORvetd6oHddR2vQxOuEO_nJLd8DbJ6CogobIAzDT-t4";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+export default supabase;
+
+// get the key from the settings/api in supabase website
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
