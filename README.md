@@ -201,4 +201,13 @@
     <li>useFetcher</li>
     <li>Update data with useFetcher</li>
   </ul>
+  <h1>Section 25</h1>
+  <ul>
+    <li>Styled components</li>
+    <li>Global styled</li>
+    <li>Styled css Props and css function</li>
+    <li>Setting up Routes</li>
+    <li>Creating navigation</li>
+    <li>React Icons</li>
+  </ul>
 </div>
