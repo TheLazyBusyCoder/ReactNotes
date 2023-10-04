@@ -396,7 +396,6 @@
       );
     }
 
-
 //////////////////////////
 /// REACT DATE PICKER
 
@@ -411,7 +410,6 @@
   }
   });
 
-
 //////////////////////////
 /// CONTEXT API + REDUCER
 
@@ -420,25 +418,24 @@
 
   // very hard , just understand from the code. (final of wroldwise)
 
-
 //////////////////////////
 /// USER AUTHENTATION. 
 
-1. get the email and pass , 
-2. check the email and pass with an api 
-3. route the user to the link and store the info in the state. 
-4. protect the app from unauthorised access. 
+  1. get the email and pass , 
+  2. check the email and pass with an api 
+  3. route the user to the link and store the info in the state. 
+  4. protect the app from unauthorised access. 
 
-// to replace the history stack , and user data should be gon once the user click back. 
-      if (isAuthenticated) navigate("/app", { replace: true });
+  // to replace the history stack , and user data should be gon once the user click back. 
+        if (isAuthenticated) navigate("/app", { replace: true });
 
 
-// protect the route.
+  // protect the route.
 
-// create a page , that will help .
-// it will recieve the children  
-// use context in it to check if the user is authenticated. 
-// rap our application inside this componnet. 
+  // create a page , that will help .
+  // it will recieve the children  
+  // use context in it to check if the user is authenticated. 
+  // rap our application inside this componnet. 
 
-// ex: <pro> AppLayout </pro>
+  // ex: <pro> AppLayout </pro>
 

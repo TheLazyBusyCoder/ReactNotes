@@ -474,7 +474,6 @@
 
     // first our outside funciton will run then , our inside function will run. 
 
-
 //////////////////////////
 /// CREATING SLICE
 

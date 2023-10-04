@@ -1,0 +1,313 @@
+//////////////////////////
+/// STYLED COMPONENTS (2023-10-02)
+//////////////////////////
+NOTES:
+
+    // Allows us to write css inside our component itself 
+    // The styles are local to that components 
+
+    1. install the library
+
+      npm i styled-components
+
+    2. creating the styled element
+
+      import styled from "styled-components";
+
+      const H1 = styled.h1`
+        font-size: 30px
+        font-weight: 600;
+      `;
+
+    3. using that element
+
+      return <H1>Any Test</H1>
+
+    4. example
+      const Button = styled.button`
+        font-size: 1.4rem;
+        padding: 1.2rem 1.6rem;
+        font-weight: 500;
+        border: none;
+        border-radius: 7px;
+        background-color: purple;
+        color: white;
+      `;
+
+//////////////////////////
+/// GLOBAL STYLED (2023-10-02)
+//////////////////////////
+NOTES:
+
+  1. create new file in /src/styles/GlobalStyles.js
+
+    import { createGlobalStyle } from "styled-components";
+
+    const GlobalStyles createGlobalStyle`
+      // global css code you want to put here
+    `;
+
+    export default GlobalStyles;
+
+  2. using that
+    // wraping component inside of that. 
+    function App() {
+      return (
+        <>
+          <GlobalStyle />
+          <div>
+            <H1>Hello</H1>
+            <Button>Click</Button>
+            <Input type="number" placeholder="Number of guests" />
+          </div>
+        </>
+      );
+    }
+
+  3. for each styled element create a new file 
+
+    inside /src/ui/Element.jsx
+
+    and export default it.
+
+    // then import it in that in the componenet file. 
+
+  // To acces hover sudo class.
+
+    const H1 = styled.h1`
+      color: red;
+      &:hover {
+        background-color: var(--color-brand-700);
+      }
+    `;
+
+//////////////////////////
+/// STYLED CSS PROPS AND CSS FUNCTION (2023-10-02)
+//////////////////////////
+NOTES:
+
+  // as this is => `` a template letral we can do javascript in it. 
+
+  src/ui/Heading.jsx
+
+    import styled , {css} from "styled-components";
+
+    const test = css`
+      text-aligin: center;
+    `;
+
+    const Heading = styled.h1`
+      font-size: ${10 > 5 ? "30px" : "5px"};
+      font-weight: 20px;
+      backtround-color: yellow;
+      ${test}
+    `;
+
+    export default Heading;
+
+  // We use this to send props to the components
+    // To send props and recive it
+
+    // Sending
+
+            <Heading type="h1">Hello</Heading>
+
+    // Recieve
+
+      const Heading = styled.h1`
+        ${(props) =>
+          props.type === "h1" &&
+          css`
+            font-size: 20px;
+            font-weight: 600;
+          `}
+
+        line-height: 1.4rem;
+      `;
+
+  // To render Heading as h1 or to do this stuff
+
+    we use the as prop
+
+      <Heading as="h1">some Text</Heading>
+
+  // We can set default props to react components.
+
+    Row.defaultProps = {
+      type: "vertical",
+    };
+
+    // using this we can ommit the type prop 
+
+  EXAMPLE: (A good use of this object and styled components)
+    const myStyle = {
+      styleOne: css`color: red;`,
+      primary: css`color: yellow;`,
+    }
+
+    const Element = styled.div`
+    ${props => myStyle[props.someProp]}
+    `;
+
+    <Element someProp="primary" />
+
+//////////////////////////
+/// SETTING UP ROUTES AND PAGES (2023-10-02)
+//////////////////////////
+NOTES:
+
+  npm i react-router-dom
+
+  // This time we are not using the data loading features of React router so we will define routes in the old way
+
+  // App.jsx
+  1. importing
+
+    import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+  2. setting the routes
+
+    function App() {
+      return (
+        <BrowserRouter>
+          <Routes>
+            <Route path="dashboard" element={<Dashboard />} />
+          </Routes>
+        </BrowserRouter>
+      );
+    }
+
+  3. Automatic redirect 
+
+          import { Navigate } from "react-router-dom";
+
+          <Route index element={<Navigate replace to="dashboard" />} />
+
+  4. if no other pages found. 
+
+          <Route path="*" element={<PageNotFound />} />
+
+  5. To set up AppLayout.jsx
+
+    1. create a file in , /src/ui/AppLayout.jsx
+
+    2. Create nested routes. 
+
+      EXAMPLE: 
+
+            <BrowserRouter>
+              <Routes>
+                <Route element={<AppLayout />}>
+                  <Route index element={<Navigate replace to="dashboard" />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="account" element={<Account />} />
+                  <Route path="bookings" element={<Bookings />} />
+                  <Route path="cabins" element={<Cabins />} />{" "}
+                  <Route path="settings" element={<Settings />} />
+                </Route>
+
+                <Route path="login" element={<Login />} />
+
+                <Route path="*" element={<PageNotFound />} />
+              </Routes>
+            </BrowserRouter>
+
+    3. using the Child layout 
+
+      // inside AppLayout.jsx
+      
+      import { Outlet } from "react-router-dom";
+
+      <Outlet />
+
+//////////////////////////
+/// CREATING NAVIGATION && REACT ICONS (2023-10-04)
+//////////////////////////
+NOTES:
+
+  1. about links and styled 3rd party component
+    // + if you want to style a Component that is coming from a 3rd party library: 
+              // example: NavLink
+
+              import { NavLink } from "react-router-dom";
+
+              const StyledNavLink = styled(NavLink)`
+                &:link, ... styles
+
+              <StyledNavLink to="/dashboard">Home</StyledNavLink>
+
+    // creating links with styled elements: 
+
+            function Sidebar() {
+              return (
+                <StyledAside>
+                  <Logo />
+                  <MainNav />
+                </StyledAside>
+              );
+            }
+
+            function MainNav() {
+              return (
+                <nav>
+                  <ul>
+                    <li>
+                      <StyledNavLink to="/dashboard">Home</StyledNavLink>
+                    </li>
+                    <li>
+                      <StyledNavLink to="/bookings">Bookings</StyledNavLink>
+                    </li>
+                  </ul>
+                </nav>
+              );
+            }
+
+    // for css reffer the example_1.jsx file
+
+  2. react icons
+
+    npm i react-icons
+
+    // see the documentation for the icons
+
+      import { iconNameFromDocumentation } from "react-icons/hi2";
+
+    // using it.
+      <li>
+              <StyledNavLink to="/dashboard">
+                <HiOutlineHome />
+                <span> Home</span>
+              </StyledNavLink>
+            </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
