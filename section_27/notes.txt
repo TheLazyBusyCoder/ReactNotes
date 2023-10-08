@@ -1,0 +1,710 @@
+//////////////////////////
+/// REACT QUERY (2023-10-04)
+//////////////////////////
+NOTES:
+
+  // good for remote state = Server data. 
+
+  1. library to manage remote state's
+  2. data is cashed.
+  3. react query refetches the data if
+    1. we leave the window.
+    2. after a timeout.
+  4. pre fetching is possible. 
+  5. offline is possible. 
+
+//////////////////////////
+/// GETTING STARTED (2023-10-05)
+//////////////////////////
+NOTES:
+
+  1. installing the package
+    npm i @tanstack/react-query
+
+  2. setting up react-query
+
+    // in src/App.jsx
+
+    import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+    // setting the time when the data is refetched 
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          // staleTime: 60 * 1000,
+          staleTime: 0,
+        },
+      },
+    });
+
+    // make this as parent component of everything
+
+    <QueryClientProvider client={queryClient}>
+      .. all the components
+    </QueryClientProvider>
+
+  3. setting up dev tools 
+
+      npm i @tanstack/react-query-devtools
+
+    // set this component as 1st child of the QueryClientProvider
+
+    import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools  initialIsOpen={false}/>
+
+      // you will be getting a button on the bottom left that has the devtools
+
+//////////////////////////
+/// FETCHING DATA (2023-10-05)
+//////////////////////////
+NOTES:
+  ( for setting related to supabase visit previous section )
+  1. in the component you want to search the data. 
+
+  import { useQuery } from "@tanstack/react-query";
+
+  // function in apiCabin.js 
+        export async function getCabins() {
+          const { data, error } = await supabase.from("cabins").select("*");
+          if (error) {
+            console.error(error);
+            throw new Error("problem");
+          }
+
+          return data;
+        }
+
+  // inside the component function
+  const {
+      isLoading,
+      error,
+      data: cabins,
+    } = useQuery({
+      queryKey: ["cabin"],
+      queryFn: getCabins,
+    });
+
+  // queryKey = so that the data can be uniqually identified 
+  // queryFn = a async function that returns a promise. 
+  // it has a lot of properties related to that query. 
+
+  if (isLoading) return <Spinner />;
+
+  // date-fns: library to work with dates in js
+
+//////////////////////////
+/// MUTATIONS (2023-10-05)
+//////////////////////////
+NOTES:
+
+  1. creating the service function.
+
+    // create a function in /src/services/apiCabins.js
+
+    export async function deleteCabin(id) {
+      const { data, error } = await supabase.from("cabins").delete().eq("id", id);
+      if (error) {
+        console.error(error);
+        throw new Error("Cabin cnb deleted");
+      }
+      return data;
+    }
+
+    // create a new policy in the supabase for deleting
+
+  2. inside the component after clicking a button
+
+    1. importing the functions
+
+      import { useMutation } from "@tanstack/react-query";
+      import { deleteCabin } from "../../services/apiCabins";
+
+    2. inside the component funciton 
+
+      const {isLoading, mutate } = useMutation({
+        mutationFn: (id) => deleteCabin(id),
+      });
+
+    3. calling the mutate the function when button is clicked
+
+      <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
+        Delete
+      </button>
+
+    4. to invalidate a query event so that data is refetched (same file). 
+
+      const queryClient = useQueryClient();
+
+      const { isDeleting, mutate } = useMutation({
+        mutationFn: (id) => deleteCabin(id),
+
+        // new part
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["cabins"],
+          });
+        },
+      });
+
+    5. if any error occured
+
+      const queryClient = useQueryClient();
+
+      const { isDeleting, mutate } = useMutation({
+        mutationFn: (id) => deleteCabin(id),
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["cabins"],
+          });
+        },
+        onError: (err) => alert(err.message),
+      });
+
+//////////////////////////
+/// REACT TOAST NOTIFICATIONS (2023-10-05)
+//////////////////////////
+NOTES:
+
+  1. installing package. 
+
+    npm i react-hot-toast
+
+  2. setting up the toast 
+
+    // in the App.jsx
+
+    // self closing component in the top level 
+
+    <QueryClientProvider>
+
+      // this is the component
+      <Toaster
+        position="top-center"
+        gutter={12}
+        containerStyle={{
+          margin: "8px",
+        }}
+        toastOptions={{
+          success: {
+            duration: 3000,
+          },
+          error: {
+            duration: 5000,
+          },
+          style: {
+            fontSize: "16px",
+            maxWidth: "500px",
+            backgroundColor: "var(--color-grey-0)",
+            color: "var(--color-grey-700)",
+          },
+        }}
+      />
+    </QueryClientProvider>
+
+  3. using the toast
+
+    import toast from "react-hot-toast";
+
+    const { isDeleting, mutate } = useMutation({
+      mutationFn: (id) => deleteCabin(id),
+      onSuccess: () => {
+        toast.success("Deleted");
+        queryClient.invalidateQueries({
+          queryKey: ["cabins"],
+        });
+      },
+      onError: (err) => toast.error(err.message),
+    });
+
+//////////////////////////
+/// REACT HOOK FORMS (2023-10-05)
+//////////////////////////
+NOTES:
+
+  // simplifis the form handling
+  // we dont need state variable to make inputs controlled elements. 
+  // simple form component example: 
+
+    return (
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormRow>
+          <Label htmlFor="name">Cabin name</Label>
+          <Input type="text" id="name" {...register("name")} />
+        </FormRow>
+
+        <FormRow>
+          <Label htmlFor="maxCapacity">Maximum capacity</Label>
+          <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
+        </FormRow>
+
+        <FormRow>
+          <Label htmlFor="regularPrice">Regular price</Label>
+          <Input type="number" id="regularPrice" {...register("regularPrice")} />
+        </FormRow>
+
+        <FormRow>
+          <Label htmlFor="discount">Discount</Label>
+          <Input
+            type="number"
+            id="discount"
+            defaultValue={0}
+            {...register("discount")}
+          />
+        </FormRow>
+
+        <FormRow>
+          <Label htmlFor="description">Description for website</Label>
+          <Textarea
+            type="number"
+            id="description"
+            defaultValue=""
+            {...register("description")}
+          />
+        </FormRow>
+
+        <FormRow>
+          <Label htmlFor="image">Cabin photo</Label>
+          <FileInput id="image" accept="image/*" {...register("image")} />
+        </FormRow>
+
+        <FormRow>
+          {/* type is an HTML attribute! */}
+          <Button variation="secondary" type="reset">
+            Cancel
+          </Button>
+          <Button>Edit cabin</Button>
+        </FormRow>
+      </Form>
+    );
+
+  1. installing the package 
+    npm i react-hook-form
+
+  2. using the package
+
+    1. import the hook
+      import { useForm } from "react-hook-form";
+
+    2. use the hook
+      const { register, handleSubmit } = useForm();
+
+      // do this on every input field
+      <Input type="text" id="name" {...register("name")} />
+
+    3. onSubmit
+
+      function onSubmit(data) {
+        console.log(data);
+      }
+
+      <Form onSubmit={handleSubmit(onSubmit)}>
+
+//////////////////////////
+/// CREATING THE CABINS (2023-10-05)
+//////////////////////////
+NOTES:
+
+
+  1. Create the policies in the supabase
+
+  2. create function 
+    // new function in apiCabins.js
+    export async function createCabin(newCabin) {
+      const { data, error } = await supabase
+        .from("cabins")
+        .insert([newCabin])
+        .select();
+
+      if (error) {
+        console.error(error);
+        throw new Error("Cabin cnb created");
+      }
+      return data;
+    }
+
+  3. use mutations
+
+      const { mutate, isLoading } = useMutation({
+        // mutationFn: (newCabin) => createCabin(newCabin),
+        mutationFn: createCabin,
+        onSuccess: () => {
+          toast.success("New cabin created");
+        },
+        onError: () => {
+          toast.error("Error while creating");
+        },
+      });
+
+  4. revalidate the data (rerender)
+
+    const queryClient = useQueryClient();
+
+    onSuccess: () => {
+      toast.success("New cabin created");
+      queryClient.invalidateQueries({
+        queryKey: ["cabins"],
+      });
+    },
+
+  5. use the mutate() function
+
+    function onSubmit(data) {
+      mutate(data);
+    }
+
+  // reseting the form 
+
+    const { register, handleSubmit, reset } = useForm();
+
+    onSuccess: () => {
+        toast.success("New cabin created");
+        queryClient.invalidateQueries({
+          queryKey: ["cabins"],
+        });
+        reset();
+      },
+
+//////////////////////////
+/// HANDLING FORM ERRORS (2023-10-05)
+//////////////////////////
+NOTES:
+
+  // second argument to the register function for the filed is required and an error message
+
+  <Input
+    type="text"
+    id="name"
+    {...register("name", {
+      required: "This field is required",
+    })}
+  />
+
+  // if error occurs in the validatiaon , second funciton will be called 
+
+  <Form onSubmit={handleSubmit(onSubmit , onError)}>
+
+  function onError(e) {
+    
+  }
+
+  // setting the max/min value for the validation
+
+  <Input
+    type="number"
+    id="maxCapacity"
+    {...register("maxCapacity", {
+      required: "This field is required",
+      min: {
+        value: 1,
+        message: "Cabin capacity should be atleast 1",
+      },
+    })}
+  />
+
+  // if you want to use your own validation function
+
+  const { register, handleSubmit, reset , getValues } = useForm();
+
+  <Input      
+    type="number"
+    id="discount"
+    defaultValue={0}
+    {...register("discount", {
+      required: "This field is required",
+      validate: (value) => {
+        if (value <= getValues().regularPrice) {
+          return true;
+        }
+        return "Discount should be less then the regular price";
+      },
+    })}
+  />
+
+  // to read the errors from the onError() function to our component
+
+  const { register, handleSubmit, reset, getValues , formState } = useForm();
+  const { errors } = formState;
+
+  {errors?.name?.message && <Error>{errors.name.message}</Error>}
+
+  // TIP: children.props.id we can do this on children props
+
+//////////////////////////
+/// UPLOADIN IMAGE TO SUPABASE (2023-10-06)
+//////////////////////////
+NOTES:
+
+  1. set the attributes of styled component (input type = file)
+
+    const FileInput = styled.input.attrs({ type: "file" })``;
+
+  2. modify the onSubmit function
+    function onSubmit(data) {
+      mutate({ ...data, image: data.image[0] });
+    }
+
+  3. modificatinos in the apiCabins.js/createCabin()
+
+    const imageName = `${Math.random()}-${newCabin.image.name}`.replace("/", "");
+
+    // copy the url from the supabase
+    const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+
+    // changes
+
+    const { data, error } = await supabase
+        .from("cabins")
+        .insert([{ ...newCabin, image: imagePath }])
+        .select();
+
+    // set up the policy in the supabase
+
+    // get the code from the documentation 
+
+    const { error: storageError } = await supabase.storage
+      .from("cabin-images")
+      .upload(imageName, newCabin.image);
+
+    // Delete the cabin if there was an error uploading the file. 
+
+  4. FINAL FUNCTION
+
+    export async function createCabin(newCabin) {
+      const imageName = `${Math.random()}-${newCabin.image.name}`.replace("/", "");
+
+      const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+
+      // 1. Create cabin
+      const { data, error } = await supabase
+        .from("cabins")
+        .insert([{ ...newCabin, image: imagePath }])
+        .select();
+
+      if (error) {
+        console.error(error);
+        throw new Error("Cabin cnb created");
+      }
+
+      // 2. Uploading image.
+      const { error: storageError } = await supabase.storage
+        .from("cabin-images")
+        .upload(imageName, newCabin.image);
+
+      if (storageError) {
+        await supabase.from("cabins").delete().eq("id", data.id);
+        console.error(storageError);
+        throw new Error("Image cannot be uploaded , so cabin not created");
+      }
+      return data;
+    }
+
+//////////////////////////
+/// EDITING CABIN (2023-10-06)
+//////////////////////////
+NOTES:
+
+  1. passing data to the form as a prop
+    {showForm && <CreateCabinForm cabinToEdit={cabin} />}
+
+  2. reciving the prop
+    function CreateCabinForm({ cabinToEdit = {} }) {
+
+  3. destructuring and checking if this is an edit session
+    const { id: editId, ...editValue } = cabinToEdit;
+    const isEditSession = Boolean(editId);
+
+  4. modify the useForm() hook
+    const { register, handleSubmit, reset, getValues, formState } = useForm({
+      defaultValues: isEditSession ? editValue : {},
+    });
+
+  // We dont edit the image data , only the cabin data. 
+  // so even if the file is empty we still want to send the data
+
+  <FileInput
+    id="image"
+    type="file"
+    accept="image/*"
+    {...register("image") , {
+      required: isEditSession ? false : "This field is required"
+    }}
+  />
+
+  // to get the data as soon as we recieve it. 
+
+  LEARN FROM THE FINAL CODE
+
+    // apiCabins.jsx
+      export async function createEditCabin(newCabin, id) {
+        const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
+
+        const imageName = `${Math.random()}-${newCabin.image.name}`.replace("/", "");
+
+        const imagePath = hasImagePath
+          ? newCabin.image
+          : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+
+        let query = supabase.from("cabins");
+
+        if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
+
+        if (id) query = query.update({ ...newCabin, image: imagePath }).eq("id" < id);
+
+        const { data, error } = await query.select().single();
+
+        if (error) {
+          console.error(error);
+          throw new Error("Cabin cnb created");
+        }
+
+        const { error: storageError } = await supabase.storage
+          .from("cabin-images")
+          .upload(imageName, newCabin.image);
+
+        if (storageError) {
+          await supabase.from("cabins").delete().eq("id", data.id);
+          console.error(storageError);
+          throw new Error("Image cannot be uploaded , so cabin not created");
+        }
+        return data;
+      }
+
+    // CreateCabinForm.jsx
+
+      function onSubmit(data) {
+        const image = typeof data.image === 'string' ? data.image : data.image[0];
+        if(isEditSession) editCabin({newCabinData: {...data , image , id: editId}});
+        createEditCabin({ ...data, image: image });
+      }
+
+      const { mutate: editCabin, isLoading: isEditing } = useMutation({
+        mutationFn: ({newCabinData , id}) => createEditCabin(newCabinData , id),
+        onSuccess: () => {
+          toast.success("cabin edited");
+          queryClient.invalidateQueries({
+            queryKey: ["cabins"],
+          });
+          reset();
+        },
+        onError: (err) => {
+          toast.error(err.message);
+        },
+      });
+
+//////////////////////////
+/// ABSTRACTION REACT QUERY TO COUSTOM HOOK (2023-10-07)
+//////////////////////////
+NOTES:
+
+  // where ever we use more then 2 hooks its a good idea to create a custom hook
+
+  1. create a file: /src/features/cabins/useDeleteCabin.js
+
+      import { useMutation, useQueryClient } from "@tanstack/react-query";
+      import toast from "react-hot-toast";
+      import { deleteCabin as deleteCabinApi } from "../../services/apiCabins";
+
+      export function useDeleteCabin() {
+
+        const queryClient = useQueryClient();
+
+        const { isDeleting, mutate: deleteCabin } = useMutation({
+          mutationFn: (id) => deleteCabinApi(id),
+          onSuccess: () => {
+            toast.success("Deleted");
+            queryClient.invalidateQueries({
+              queryKey: ["cabins"],
+            });
+          },
+          onError: (err) => toast.error(err.message),
+        });
+
+        return { isDeleting, deleteCabin };
+      }
+
+  2. use that hook in the CabinRow.jsx
+
+    const { isDeleting, deleteCabin } = useDeleteCabin();
+
+  TIP: we get access to onSuccess() function inside the mutate() function
+
+    createEditCabin({ ...data, image: image } , {
+      onSuccess: (data) => {
+        reset();
+      }
+    });
+
+//////////////////////////
+/// RE-LEARNING (2023-10-08)
+//////////////////////////
+NOTES:
+
+  // create a file /src/services/apiSettings.js 
+
+    import supabase from "./supabase";
+
+    export async function getSettings() {
+      const { data, error } = await supabase.from("settings").select("*").single();
+
+      if (error) {
+        console.error(error);
+        throw new Error("Settings could not be loaded");
+      }
+      return data;
+    }
+
+    // We expect a newSetting object that looks like {setting: newValue}
+    export async function updateSetting(newSetting) {
+      const { data, error } = await supabase
+        .from("settings")
+        .update(newSetting)
+        // There is only ONE row of settings, and it has the ID=1, and so this is the updated one
+        .eq("id", 1)
+        .single();
+
+      if (error) {
+        console.error(error);
+        throw new Error("Settings could not be updated");
+      }
+      return data;
+    }
+
+  // create a new hook file /src/feature/settings/useSettings.js
+
+    import { useQuery } from "@tanstack/react-query";
+    import { getSettings } from "../../services/apiSettings";
+
+    export function useSettings() {
+      const {
+        isLoading,
+        data: settings,
+        error,
+      } = useQuery({
+        queryKey: ["settings"],
+        queryFn: getSettings,
+      });
+
+      return { isLoading, error, settings };
+    }
+
+  // use in the component. 
+    const { isLoading, settings } = useSettings();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

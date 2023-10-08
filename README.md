@@ -214,4 +214,11 @@
   <ul>
     <li>All about supabase</li>
   </ul>
+  <h1>Section 27</h1>
+  <ul>
+    <li>About React-Query</li>
+    <li>React Toast Notifications</li>
+    <li>React Hook Forms</li>
+    <li>Abstracting react query to custom hook</li>
+  </ul>
 </div>
