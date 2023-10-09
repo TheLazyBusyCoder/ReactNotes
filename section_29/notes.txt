@@ -1,0 +1,88 @@
+//////////////////////////
+/// STORING STATE IN URL (2023-10-09)
+//////////////////////////
+NOTES:
+
+  1. setting values to the url 
+    const [searchParams , setSearchParams] = useSearchParams();
+    searchParams.set("name-of-variable" , "value");
+    setSearchparams(searchParams);
+
+  2. to use the values
+
+    const [searchParams] = useSearchParams();
+    const variable = searchParams.get('name-of-variable') || 'some-default-value';
+
+//////////////////////////
+/// PREFETCHING (2023-10-09)
+//////////////////////////
+NOTES:
+
+  const queryClient = useQueryClient();
+
+  queryClient.prefetchQuery({
+    queryKey: ["bookings"],
+    queryFn: () => getBookings(),
+  });
+
+// All with supabase and normal functions
+
+//////////////////////////
+/// CSS VARIABLES (2023-10-09)
+//////////////////////////
+NOTES:
+
+  :root.light-mode === &.light-mode 
+
+  :root === html tag
+
+//////////////////////////
+/// REACT RECHART (2023-10-09)
+//////////////////////////
+NOTES:
+
+  npm i recharts
+
+  // visist the documentation for more. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

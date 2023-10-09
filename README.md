@@ -230,4 +230,9 @@
     <li>React Portal</li>
     <li>Clone element</li>
   </ul>
+  <h1>Section 29</h1>
+  <ul>
+    <li>Just Revision</li>
+    <li>ReCharts - library for graphs</li>
+  </ul>
 </div>
