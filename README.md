@@ -221,4 +221,13 @@
     <li>React Hook Forms</li>
     <li>Abstracting react query to custom hook</li>
   </ul>
+  <h1>Section 28</h1>
+  <ul>
+    <li>Advance React Patters</li>
+    <li>Render Props Pattern</li>
+    <li>Higher order component</li>
+    <li>Compound component patterns</li>
+    <li>React Portal</li>
+    <li>Clone element</li>
+  </ul>
 </div>
