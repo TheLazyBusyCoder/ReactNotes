@@ -1,0 +1,355 @@
+//////////////////////////
+/// ADVANCE REACT PATTERS (2023-10-08)
+//////////////////////////
+NOTES:
+
+  1. Reuse
+    1. UI => components and props , children
+    2. State full logic => custom hooks
+
+  // Render props pattern => UI + Statefull logic (Re usability)
+
+  // Compound component pattern (small component making big component)
+
+//////////////////////////
+/// RENDER PROPS PATTERN (theory) (2023-10-08)
+//////////////////////////
+NOTES:
+
+  // when you want to reuse Logic (state) + UI
+
+  // the render props pattern
+
+  // render is a prop we can pass to a funciton , with it , componenet knows what and how to render. 
+  <Component render={(id) => if(id===1) <List />} />
+  // we just use that function in our component to render things 
+
+  EXAMPLE:
+
+        import { useState } from "react";
+        import { faker } from "@faker-js/faker";
+        import "./styles.css";
+        import withToggles from "./HOC";
+
+        const products = Array.from({ length: 20 }, () => {
+          return {
+            productName: faker.commerce.productName(),
+            description: faker.commerce.productDescription(),
+            price: faker.commerce.price()
+          };
+        });
+
+        const companies = Array.from({ length: 15 }, () => {
+          return {
+            companyName: faker.company.name(),
+            phrase: faker.company.catchPhrase()
+          };
+        });
+
+        function ProductItem({ product }) {
+          return (
+            <li className="product">
+              <p className="product-name">{product.productName}</p>
+              <p className="product-price">${product.price}</p>
+              <p className="product-description">{product.description}</p>
+            </li>
+          );
+        }
+
+        function CompanyItem({ company, defaultVisibility }) {
+          const [isVisible, setIsVisisble] = useState(defaultVisibility);
+
+          return (
+            <li
+              className="company"
+              onMouseEnter={() => setIsVisisble(true)}
+              onMouseLeave={() => setIsVisisble(false)}
+            >
+              <p className="company-name">{company.companyName}</p>
+              {isVisible && (
+                <p className="company-phrase">
+                  <strong>About:</strong> {company.phrase}
+                </p>
+              )}
+            </li>
+          );
+        }
+
+        function List({ title, items, render }) {
+          const [isOpen, setIsOpen] = useState(true);
+          const [isCollapsed, setIsCollapsed] = useState(false);
+
+          const displayItems = isCollapsed ? items.slice(0, 3) : items;
+
+          function toggleOpen() {
+            setIsOpen((isOpen) => !isOpen);
+            setIsCollapsed(false);
+          }
+
+          return (
+            <div className="list-container">
+              <div className="heading">
+                <h2>{title}</h2>
+                <button onClick={toggleOpen}>
+                  {isOpen ? <span>&or;</span> : <span>&and;</span>}
+                </button>
+              </div>
+              {isOpen && <ul className="list">{displayItems.map(render)}</ul>}
+
+              <button onClick={() => setIsCollapsed((isCollapsed) => !isCollapsed)}>
+                {isCollapsed ? `Show all ${items.length}` : "Show less"}
+              </button>
+            </div>
+          );
+        }
+
+        // LATER: Let's say we got this component from a 3rd-party library,
+        // and can't change it. But we still want to add the 2 toggle
+        // functionalities to it
+        function ProductList({ title, items }) {
+          return (
+            <ul className="list">
+              {items.map((product) => (
+                <ProductItem key={product.productName} product={product} />
+              ))}
+            </ul>
+          );
+        }
+
+        const ProductListWithToggles = withToggles(ProductList);
+
+        export default function App() {
+          return (
+            <div>
+              <h1>Render Props Demo</h1>
+
+              <div className="col-2">
+                <List
+                  title="Products"
+                  items={products}
+                  render={(product) => (
+                    <ProductItem key={product.productName} product={product} />
+                  )}
+                />
+
+                <List
+                  title="Companies"
+                  items={companies}
+                  render={(company) => (
+                    <CompanyItem
+                      key={company.companyName}
+                      company={company}
+                      defaultVisibility={false}
+                    />
+                  )}
+                />
+              </div>
+
+              <div className="col-2">
+                <ProductList title="Products HOC" items={products} />
+                <ProductListWithToggles title="Products HOC" items={products} />
+              </div>
+            </div>
+          );
+        }
+
+//////////////////////////
+/// HIGHER ORDER COMPONENT (HOC) (theory) (2023-10-09)
+//////////////////////////
+NOTES:
+
+  A component that takes an component v1 and returns an component v2 
+
+  // starts withToggle 
+
+//////////////////////////
+/// COMPOUND COMPONENT PATTERNS (2023-10-09)
+//////////////////////////
+NOTES:
+
+  (theory)
+    // parent component with child component ( child only making sence wiht parent) 
+    // example: html select element. 
+
+    <select>
+      <option>1</optino>
+      <option>2</optino>
+    </select>
+
+    example in react: 
+
+    // normal way
+    <Counter label="" increaseIcon="+" ....propExplosion />
+
+    // compound component pattern
+    <Counter>
+      <Counter.Increase>Some text</Counter.Increase>
+      <Counter.Label>Some text</Counter.Label>
+      <Counter.Decrease>Some text</Counter.Decrease>
+    </Counter>
+
+    // we use context for this pattern to share the states in child 
+
+  STEPS: 
+
+  // inside Counter.js
+
+  1. create a context 
+
+    import { createContext } from "react";
+    const counterContext = createContext();
+
+  2. create the parent component 
+
+    functino Counter({children}) {
+      const [count , setCount] = useState(0);
+      const increase = () => setCount((c) => c + 1);
+      const decrease = () => setCount((c) => c - 1);
+      return (
+        <CounterContext.Provider value={{count , increase , decrease}}>
+        {<span>{children}</span>}
+        </CounterContext.Provider>
+      )
+    }
+
+  3. create child component that will help the parent component 
+
+    function Count() {
+      const {count } = useContext(CounterContext);
+      return <span>{count}</span>;
+    }
+
+    function Increase({icon}) {
+      const { increase } useContext(CounterCOntext);
+      return <button onClick={() => increase()}>{icon}</button>
+    }
+
+    function Decrease({icon}) {
+      const { decrease } useContext(CounterCOntext);
+      return <button onClick={() => decrease()}>{icon}</button>  
+    }
+
+    function Label({children}) {
+      return <span>{children}</span>
+    }
+
+  4. Add child component as properties of parent component 
+
+    Counter.Count = Count;
+    Counter.Label = Label;
+    Counter.Increase = Increase;
+    Counter.Decrease = Decrease;
+
+    export default Counter;
+
+  5. using in app.js
+
+    function App() {
+      return <Counter>
+        <Counter.Decrease icon="-" />
+        <Counter.Count />
+        <Counter.Increase icon="+" />
+        <Counter.Label>Some text</Counter.Label>
+      </Counter>
+    }
+
+//////////////////////////
+/// REACT PORTAL (2023-10-09)
+//////////////////////////
+NOTES:
+
+  // it is used to render element outside of react dom tree , => modal windows , menus , ( elements staying on top of other elements ) 
+
+  import { createPortal } from "react-dom";
+  return createPortal(jsx , where we want to render);
+
+  EXAMPLE: 
+
+    function Modal({ children, onClose }) {
+      return createPortal(
+        <Overlay>
+          <StyledModal>
+            <Button onClick={onClose}>
+              <HiXMark />
+            </Button>
+            <div>{children}</div>
+          </StyledModal>
+        </Overlay>,
+        document.body
+      );
+    }
+
+//////////////////////////
+/// CLONE ELEMENT (2023-10-09)
+//////////////////////////
+NOTES:
+
+  const clonedElement = cloneElement(children , props );
+
+  EXAMPLE: 
+
+    <Modal.Open opens="cabin-form ">
+          <Button>Add new cabin</Button>
+        </Modal.Open>
+
+    // we want to add a onclick on the button which is a child of Open.
+
+    function Open({ children, opens: opensWindowName }) {
+      const { open } = useContext(ModalContext);
+
+      return cloneElement(children, { onClick: () => open(opensWindowName) });
+    }
+
+    // we recieve the props in Open , and we clone that Button element , adding new props and returning it. 
+
+          <div>{cloneElement(children, { onCloseModel: close })}</div>
+
+  // to atach a onclick no the modal window 
+
+  const ref = useRef();
+
+  useEffect(function() {
+    function handleClick(e) {
+      if(ref.current && !ref.current.contains(e.target)) close();
+    }
+    documents.addEventListener('click' , handleClick , true);
+    return () => document.removeEventListener('click' , handleClick , true);
+  } , []);
+
+  // true => event will execute in the capturing fase , it will not bubble up. 
+
+  // ref={ref} in the parent of the child where we want to use ref.
+
+
+  // we need something to keep an track on the opend element in the Compound Component.
+
+  const [openId , setOpenId] = useState('');
+  const close = () => setOpenId('');
+  const open = setOpenId;
+
+  // to get element position ( so that the window opens in the same position as clicked)
+
+  const rect = e.target.closest('button').getBoundingClientRect();
+
+  const x = window.innerWidth - rect.width - rect.x;
+  const y = rect.y + rect.height + 8;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
