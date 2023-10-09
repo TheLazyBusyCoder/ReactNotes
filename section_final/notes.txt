@@ -1,0 +1,36 @@
+Netlify
+
+	npm run build
+
+	use the dist folder
+
+	inside the dist folder create a file 
+
+	/dist/netlify.toml
+
+	[[redirects]]
+	from ="/*"
+	to="/index.html"
+	status=200
+
+Vercel 
+
+	vercel.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
