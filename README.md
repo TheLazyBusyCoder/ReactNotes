@@ -145,7 +145,7 @@
   <li>Stail closers</li>
 </ul>
 
-<h1>Section 20</h1>
+<h1><a href="https://github.com/TheLazyBusyCoder/ReactNotes/tree/main/section_20">Section 20</a></h1>
 <ul>
   <li>All About Redux</li>
   <li>Old way of using Redux</li>
