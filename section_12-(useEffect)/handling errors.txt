@@ -1,0 +1,32 @@
+
+//////////////////////////
+/// HANDELING ERRORS
+
+  // net is diss connected
+
+  useEffect(function () {
+    async function getMovie() {
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&s=adfadfa`
+        );
+        if (!res.ok) throw new Error("Somthing went wrong :(");
+        const data = await res.json();
+        if (data.Response === "False") throw new Error("Movie not found");
+        setMovies(data.Search);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    getMovie();
+  }, []);
+
+
+        <Box>
+          {isLoading && <Loader />}
+          {!isLoading && !error && <WatchedMovies movies={movies} />}
+          {error && <ErrorBox message={error} />}
+        </Box>

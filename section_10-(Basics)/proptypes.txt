@@ -1,0 +1,18 @@
+
+//////////////////////////
+/// PROPTYPES
+
+  // to check the type of the prop that user is passing , 
+
+  import PropTypes from "prop-types";
+
+  // isRequired if the value should be present
+  // but rather than this , use default values. 
+
+  StarRating.propTypes = {
+    maxRating: PropTypes.number.isRequired,
+  }
+
+  PropTypes.string,
+  PropTypes.array,
+  PropTypes.func,

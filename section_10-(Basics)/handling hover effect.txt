@@ -1,0 +1,61 @@
+
+//////////////////////////
+/// HANDLING HOVER EFFECT
+
+  onMouseEnter={tempIn}
+  onMouseLeave={tempOut}
+
+  //EXAMPLE: 
+    export default function StarRating({ maxRating = 5 }) {
+      
+      const [rating, setRating] = useState(0);
+      const [tempRating, setTempReating] = useState(0);
+
+      function handleRating(val) {
+        setRating(val);
+      }
+
+      function handelTempRatingIn(val) {
+        setTempReating(val);
+      }
+
+      function handelTempRatingOut() {
+        setTempReating(0);
+      }
+
+      return (
+        <div style={containerStyle}>
+          <div style={containerStarStyle}>
+            {Array.from({ length: maxRating }, (_, i) => {
+              return (
+                <Star
+                  key={i}
+                  onRate={() => handleRating(i + 1)}
+                  full={tempRating ? tempRating >= i + 1 : rating >= i + 1}
+                  tempIn={() => handelTempRatingIn(i + 1)}
+                  tempOut={() => handelTempRatingOut()}
+                />
+              );
+            })}
+          </div>
+          <p style={textStyle}>{tempRating || rating || ""}</p>
+        </div>
+      );
+    }
+
+    const starStyle = {
+      display: "block",
+      cursor: "pointer",
+      height: "48px",
+      width: "48px",
+    };
+
+    function Star({ onRate, full, tempIn, tempOut }) {
+      return (
+        <span
+          role="button"
+          onClick={onRate}
+          style={starStyle}
+          onMouseEnter={tempIn}
+          onMouseLeave={tempOut}
+        >

@@ -1,0 +1,25 @@
+
+//////////////////////////
+/// REUSABLE COMPONENT USING CC
+
+  // Basically its just we are trying to use children and getting rid of reusable code
+        <Main>
+          <Box>
+            <WatchedMovies movies={movies} />
+          </Box>
+          <Box>
+            <WatchedSummary watched={watched} />
+            <WatchedMovieList watched={watched} />
+          </Box>
+        </Main>
+
+  2. way 
+        <Box element={<WatchedMovies movies={movies} />} />
+          <Box
+            element={
+              <>
+                <WatchedSummary watched={watched} />
+                <WatchedMovieList watched={watched} />
+              </>
+            }
+          />

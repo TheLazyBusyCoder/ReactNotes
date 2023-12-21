@@ -1,0 +1,44 @@
+//////////////////////////
+/// CLEANING FUNCTION USEEFFECT
+
+  // a function that runs every thing when the component re renders
+
+  // we return from an effect 
+
+  // 1. before the effect is executed again 
+  // 2. after an componenet has unmounted. 
+
+  // Things we should do in cleanup function 
+  // http request -> cancle request 
+  api subscription -> cancle subscription 
+  start timer -> stop timer 
+  add event listener -> remove listener 
+
+  // becaues of closure this function has access to the variables. 
+
+  return function() {
+    document.title = "blabla"; 
+  }
+
+//////////////////////////
+/// CLEANING UP FETCH REQUEST
+
+  // we are doing this coz on each key stroke we are sending an request
+
+      // outside async function
+      const controller = new AbortController();
+
+
+        const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            {
+              signal: controller.signal,
+            }
+
+            inside catch(err) 
+          if (err.name !== "AbortError") setError(err.message);
+
+
+        return function () {
+            controller.abort();
+        };

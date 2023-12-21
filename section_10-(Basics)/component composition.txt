@@ -1,0 +1,19 @@
+//////////////////////////
+/// COMPONENT COMPOSITION 
+
+  // passing components using the children props 
+  // fixes problem of prop drilling 
+
+  // EXAMPLE: 
+
+  // 3 components 1. one , 2. two , 3. three
+  // one has two; two needs three; 
+  // passing three to two on one , as children props
+
+  <NavBar>
+    <Logo />
+    <SearchBar />
+    <NumResults movies={movies} />
+  </NavBar>
+
+  // when every there is a extra passing of the state through components 1->2->3->4 ; 2 and 3 dont need it , so we do component composition , see example inside usepopcorn 

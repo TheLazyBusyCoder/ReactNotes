@@ -1,0 +1,97 @@
+//////////////////////////
+/// EXAMPLE
+
+  function App() {
+      let id = useRef();
+      useEffect(function () {
+          id.current = setInterval(() => {
+              console.log("timer started");
+          }, 1000);
+      }, []);
+      return (
+          <div>
+              <button
+                  onClick={() => {
+                      clearInterval(id.current);
+                  }}
+              >
+                  click
+              </button>
+          </div>
+      );
+  }
+
+//////////////////////////
+/// REF HOOK
+
+  cost myRef = useRef(23);
+
+  myRef.current -> to use the ref. 
+
+  // values are presestant over multipel renders.
+
+  // 1. to store the previous state. 
+  // 2. setTimeout id. 
+  // 3. select and store dom elements.
+  
+  // Ref's are for the data that is NOT rendered. usually only appears in event handlers or effects , not in JSX
+
+  // Do not read and write .current property in render logic.
+
+  Ref vs State => if you update State it will cause rerender.
+  if you update Ref it will not cause rerender.
+
+  // using ref to SELECT DOM element and perform operation 
+  const inputEl = useRef(null);
+
+  useEffect(function () {
+    inputEl.current.focus();
+  }, []);
+
+  // directly on the component 
+  ref={inputEl}
+
+  // EXAMPLE: 
+  function SearchBar({ query, setQuery }) {
+    const inputEl = useRef(null);
+    useEffect(
+      function () {
+        //* if the current focused element is same as inputEl.current
+        if (document.activeElement === inputEl.current) return;
+        function current(e) {
+          if (e.code === "Enter") {
+            inputEl.current.focus();
+            setQuery("");
+          }
+        }
+        document.addEventListener("keydown", current);
+        return () => document.removeEventListener("keydown", current);
+      },
+      [setQuery]
+    );
+
+    return (
+      <input
+        className="search"
+        type="text"
+        placeholder="Search movies..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        ref={inputEl}
+      />
+    
+//////////////////////////
+/// USING REF'S TO PERCEST DATA BETWEEN RENDERS. 
+
+  const counter = useRef(0);
+
+  // we are not allowed to mutate ref in render logic. so we use effect 
+
+  const countRef = useRef(0);
+
+  useEffect(
+    function () {
+      countRef.current = countRef.current + 1;
+    },
+    [userRating]
+  );

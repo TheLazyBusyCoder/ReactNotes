@@ -1,0 +1,48 @@
+
+//////////////////////////
+/// DERIVED STATE
+
+  // a state where other variables are dependent on 
+
+  const [cart , setCart] = useState([
+    {id: 1 , name: 'a' , price: 5},
+    {id: 2 , name: 'a' , price: 5},
+    {id: 3 , name: 'a' , price: 5},
+  ]);
+
+  const num = cart.length; 
+  const totalPrice = cart.reduce((acc , cur) => acc + cur , 0);
+
+  // EXAMPLE of derived state 
+    function Stats({ items }) {
+      if (!items.length) return <em className="status">Start packing somthing</em>;
+
+      // these are variables that depends on the items state. 
+      const n = items.length;
+      const p = items.filter((ele) => ele.packed === true).length;
+      const per = Math.round((p / n) * 100);
+      return (
+        <footer className="status">
+          <em>
+            {per === 100
+              ? "You have packed everything"
+              : `You have ${n} items on your list and you already packed ${p} (${per}%)`}
+          </em>
+        </footer>
+      );
+    }
+
+  // to sort strings 
+    const a = ['leo', 'peop'];
+
+    const output = a.slice().sort((a , b) => a.localCompare(b));
+
+    <select value={state} onChange={(e) => setState(e.target.value)}>
+      <option value='one'>a</option>
+      <option value='one'>b</option>
+      <option value='one'>c</option>
+    </select>
+
+  // shifting Components to different files 
+
+    shift the function to new file , with Name.js and export default and import necessry file , and then import Name from "./Name";

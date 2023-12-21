@@ -1,0 +1,18 @@
+
+//////////////////////////
+/// LAZY INITIAL STATE
+
+  // Initializing state with a callback. 
+
+    localStorage.setItem("watched", JSON.stringify([...watched, movie])); // because updating of state is asynchronous
+
+  // use state also accept a call back function to store the value. 
+
+    useState(function() {
+      return someValue; 
+    })
+
+  // The watched state will be inilizi.... through this funciton
+    const [watched, setWatched] = useState(function () {
+      return JSON.parse(localStorage.getItem("watched"));
+    });

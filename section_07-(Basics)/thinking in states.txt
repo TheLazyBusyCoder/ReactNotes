@@ -1,0 +1,26 @@
+//////////////////////////
+/// THINKING IN STATES 
+
+  // local state 
+
+  // global state: we can define global state with , Contex API , Redux
+
+  // Lifting states up = moving local state to the common parent component. 
+
+  // we can pass even state function in the props 
+
+  // Deleting an element from an array 
+      setItems((items) => {
+        return items.filter((item) => {
+          return item.id !== id;
+        });
+      });
+
+  // Updating an item 
+    function handelUpdate(id) { 
+      setItems((items) => {
+        return items.map((item) => {
+          return item.id === id ? { ...item, packed: !item.packed } : item;
+        });
+      });
+    }

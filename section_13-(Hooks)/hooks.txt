@@ -1,0 +1,24 @@
+//////////////////////////
+/// HOOKS
+
+  // starts with use 
+
+  // React has 20 hooks 
+    useState()
+    useEffect()
+    useReducer()
+    useContext()
+    useRef()
+    useCallback()
+    useMemo()
+    useTransition()
+    useDeferredValue()
+
+  // Hooks can only be called at top level not in { if else , loops , nested functions}
+
+  // Hooks can only be called from React Functions. { Component , custom hook }
+
+  // Hooks rely on call order
+
+  // Fiber tree node has a linked list which stores states data. 
+  // It means states are conntected with each other with linked list. if the state is not in the top level , and is inside a if else , some times condition might be false , and one of the states would be not initilized , so in this situation linked list gets distoried. 

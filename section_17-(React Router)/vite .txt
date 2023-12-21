@@ -1,0 +1,35 @@
+//////////////////////////
+/// VITE
+
+  npm create vite@latest
+  cd projectName
+  npm i
+
+  // to run the server 
+  npm run dev (see package.json for more comands)
+
+  // setting up eslint 
+  npm install eslint vite-plugin-eslint eslint-config-react-app --save-dev
+
+  // create file .eslintrc.json
+
+  // put this in that
+  {
+    "extends": "react-app"
+  }
+
+  // this in vite.config.js
+
+  import { defineConfig } from "vite";
+  import react from "@vitejs/plugin-react";
+  import eslint from "vite-plugin-eslint";
+
+  // https://vitejs.dev/config/
+  export default defineConfig({
+    plugins: [react(), eslint()],
+  });
+
+
+  index.js -> main.jsx
+
+  js -> jsx

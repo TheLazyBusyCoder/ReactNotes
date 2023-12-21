@@ -1,0 +1,45 @@
+//////////////////////////
+/// KEY PROP
+
+  // reseting the state for same element in same position 
+
+  // special prop that we use to tell the diffing algorithm that an element is unique 
+
+  // allows react to distinguish between multiple instances of the same componenet type 
+
+  // when a key stays the same across renders, the element will be kept in the DOM even if the position in the tree changes. 
+
+  // When a key changes between renders , the element will be destroyed and a new one will be created(even if the positino in the tree is the same as before). 
+
+  1. Keys in List's [Stabel key]
+
+  <ul>
+  <Question question={1} />
+  <Question question={2} />
+  </ul>
+
+  // here the question 1 , 2 will be rebuild as their position has been changed. (waste at work)
+  <ul>
+  <Question question={0} />
+  <Question question={1} />
+  <Question question={2} />
+  </ul>
+
+  // So we use key. 
+  <ul>
+  <Question key='q1' question={1} />
+  <Question key='q2' question={2} />
+  </ul>
+
+  <ul>
+  <Question key='q0' question={0} />
+  <Question key='q1' question={1} />
+  <Question key='q2' question={2} />
+  </ul>
+  // by using the key prop , now react knows that the elements are the same only the position has been changed. So the elements will not be rebuild.
+
+  // always use the key prop when you have multiple child elements of the same type. 
+
+  // KEY PROP TO RESET STATE [Changing Key]
+
+  // key='q1' -> key='q2' (this will reset the state's )

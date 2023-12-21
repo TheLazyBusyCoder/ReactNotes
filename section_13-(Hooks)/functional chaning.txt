@@ -1,0 +1,15 @@
+
+//////////////////////////
+/// SELECTING DOM ELEMENTS IN REACT
+
+  normal way of doing things (not good as react is declerative)
+  useEffect(function() {
+    const el = document.querySelector('.className'):
+    el.focus(); 
+  })
+
+//////////////////////////
+/// FUNCTIONAL CHANING
+
+  // functionName?.()
+

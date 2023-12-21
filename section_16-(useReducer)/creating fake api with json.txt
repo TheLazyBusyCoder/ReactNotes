@@ -1,0 +1,17 @@
+//////////////////////////
+/// CREATING A FAKE API FOR JSON FILES 
+
+  // to install the server
+      npm i json-server
+
+  // add this in npm script 
+      "server": "json-server --watch data/questions.json --PORT 8765"
+
+  // to run the script 
+      npm run server
+
+  // tip: the json file should have 1 opject with the property , of that extension 
+  // example { "questions": ...data } -> url: localhost:8765/questions
+
+  // while using reducer , we dont need to use handler function , we can do the same with dispatcher() 
+  // passing it to the component with props 

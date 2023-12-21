@@ -1,0 +1,12 @@
+
+//////////////////////////
+/// CHILDREN PROP
+
+  <Button one={a} two={b} >Some HTML</Button> 
+  <Button one={a} two={b} >Previous</Button> 
+
+  function Button({one , two , children}) {
+    return <button>{children}</button;  // children data is different 
+  }
+
+

@@ -1,5 +1,0 @@
-//////////////////////////
-/// Destructing 
-
-
-quokka extension for live output from js 

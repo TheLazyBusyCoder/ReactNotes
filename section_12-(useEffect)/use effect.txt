@@ -1,0 +1,64 @@
+//////////////////////////
+/// USEEFFECT
+
+    useEffect(function () {
+      fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=moon`)
+        .then((res) => res.json())
+        .then((data) => setMovies(data.Search));
+    }, []);
+
+  // empty array means , as soon as the App() loads it will get executed 1 time. 
+  // this will run after the component is painted to the screen 
+
+  // side effects should not be in render logic 
+
+  1. Event handlers. 
+  2. useEffect hook -> when we want to do side effect (fetch) when the component is painted or loaded
+
+  // Execution of the useEffect() depends on the dependency array.
+  // effect returns a cleanup function
+
+    useEffect(function () {
+      fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=moon`)
+        .then((res) => res.json())
+        .then((data) => setMovies(data.Search));
+
+        return () => {};  // runs before the component re-renders or unmounts 
+    }, []);
+
+  // Event handlers are the prefered way of doing sideeffects 
+
+  // Using an async function inside useEffect() 
+    useEffect(function () {
+      async function getMovie() {
+        const res = await fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=moon`);
+        const data = await res.json();
+        setMovies(data.Search);
+      }
+      getMovie();
+    }, []);
+
+//////////////////////////
+/// USE EFFECT DEPENDANCY ARRAY
+
+  // effects runs after the browser is painted 
+
+  By default effects runs after every render, We can prevent that by passing an dependency array.
+
+  // we put props and state variables inside the array 
+
+  // whenever a dependency or state or prop is changed , effect is executed again. 
+
+  useEffect(fn , [x ,y , z]); // this will run when the state changes.
+  useEffect(fn , []); // this will run only once
+  useEffect(fn);  // effect will run on every render (bad idea).
+
+  // LayoutEffect -> runs in between commit and browser paint 
+
+  // first render logic runs 
+
+  // As the query varialbe changes , we do a new fetch request. 
+
+  // Changling page title
+
+  inside the useEffect() => document.title = "some title";

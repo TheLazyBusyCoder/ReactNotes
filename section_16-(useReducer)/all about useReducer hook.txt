@@ -1,0 +1,69 @@
+useReducer() -> a technique for managning useState
+
+//////////////////////////
+/// USEREDUCER HOOK
+
+  // useState() -> useReducer() 
+
+  // outside of the component 
+  function reducer(state, action) {
+    return state + action;
+  }
+
+  const [count, dispatch] = useReducer(reducer, 0);
+
+  // when to update the state. 
+
+  dispatch(1);  // we can pass anything here 'also object' , like 1 function but we can configure it to perform different actions using ojbect. 
+
+  // 1 will become action and state is current state value. 
+
+  // EXAMPLE: 
+
+    function reducer(state, action) {
+        if (action.type === "inc") return state + action.payload;
+        if (action.type === "dec") return state - action.payload;
+        if (action.type === "setCount") return action.payload;
+    }
+
+    function App() {
+        const [count, dispatch] = useReducer(reducer, 0);
+        const dec = function () {
+            dispatch({ type: "dec", payload: 1 });
+        };
+        const inc = function () {
+            dispatch({ type: "inc", payload: 1 });
+        };
+        return (
+            <div>
+                <button onClick={dec}>-</button>
+                <p>{count}</p>
+                <button onClick={inc}>+</button>
+            </div>
+        );
+    }
+          
+//////////////////////////
+/// A GOOD USE OF REDUCER HOOK
+
+  // Example1.js 
+
+//////////////////////////
+/// WHEN TO USE
+
+  // useReducer is a middle man between dispatcher and state.
+  // Bank and user example 
+
+//////////////////////////
+/// USEEFFECT TO SET TIMEER
+
+  // When timer coponent loads
+  useEffect(()=> {
+    setInterval(()=> {
+      dispatch({type: 'tick'});
+    } , 1000);
+  }, [] );
+
+  // this will triger a tick case , it will update the time left in the reducer function. 
+
+  example look in Example2.js

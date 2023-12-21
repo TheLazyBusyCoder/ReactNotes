@@ -1,0 +1,107 @@
+//////////////////////////
+/// CUSTOM HOOKS
+
+  // reuse: 1. UI (Componen) 2. LOGIC (1. no hook (normal function) 2. yes hook (custom hook) )
+  // coustom hooks that we can create and use in multiple projects. 
+  // custom hooks uses regular hooks 
+
+  // custom hooks is a normal function which returns [] or {} and wich uses 1 or more default hooks 
+  // name should start with useName..
+
+  EXAMPLE: 
+
+  function useFetch(url) {
+    const [data , setData] = useState([]);
+    const [isLoading , setIsLoading] = useState(false);
+
+    useEffect(function() {
+      fetch(url).then((res) => res.json()).then((res) => setData(res))
+    } , []);
+
+    return [data , isLoading];
+  }
+
+  // RULES: 
+  // 1. If we want to use same functionality in different part of the code. 
+  // 2. if we want to minimize a hug part of code. 
+
+
+  // create a new file. 
+  useMovies.js 
+
+    import { useState, useEffect } from "react";
+
+    const KEY = "1aff8564";
+
+    export function useMovies(query) {
+    const [movies, setMovies] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    useEffect(
+        function () {
+        const controller = new AbortController();
+
+        async function getMovie() {
+            try {
+            setIsLoading(true);
+            setError("");
+            const res = await fetch(
+                `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+                {
+                signal: controller.signal,
+                }
+            );
+            if (!res.ok) throw new Error("Somthing went wrong :(");
+            const data = await res.json();
+            if (data.Response === "False") throw new Error("Movie not found");
+            setMovies(data.Search);
+            setError("");
+            } catch (err) {
+            if (err.name !== "AbortError") setError(err.message);
+            } finally {
+            setIsLoading(false);
+            }
+        }
+
+        if (query.length < 3) {
+            setMovies([]);
+            setError("");
+            return;
+        }
+
+        getMovie();
+
+        return function () {
+            controller.abort();
+        };
+        },
+        [query]
+    );
+
+    return { movies, error, isLoading };
+    }
+
+  App.js
+    // inside App()
+    const { movies, isLoading, error } = useMovies(query);
+
+  EXAMPLE2: 
+
+          import { useState, useEffect } from "react";
+
+          export function useLocalStorageState(initialState, key) {
+            const [value, setValue] = useState(function () {
+              const data = localStorage.getItem(key);
+
+              return data ? JSON.parse(data) : initialState;
+            });
+
+            useEffect(
+              function () {
+                localStorage.setItem(key, JSON.stringify(value));
+              },
+              [value, key]
+            );
+
+            return [value, setValue];
+          }

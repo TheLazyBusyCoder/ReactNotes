@@ -1,0 +1,357 @@
+//////////////////////////
+/// REACT ROUTER AND SPA
+
+  // client side routing
+
+  // SPA
+  // user click router link -> url is chnged -> Dom is updated. 
+  // The page will never reload , just one page
+
+  // We can ask data from the server , but we cannot ask new page , 
+  // because page is never reloaded. 
+
+//////////////////////////
+/// CREATING ROUTS
+
+  npm install react-router-dom
+
+  import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+  function App() {
+    return (
+      <BrowserRouter>
+        <Routes>
+        // setting the route
+          <Route path="product" element={<Product />} />
+          <Route path="home" element={<Home />} />
+          <Route path="pricing" element={<Pricing />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+
+  // for root route. 
+          <Route path="/" element={<Homepage />} />
+
+
+  // for PageNotFound
+          <Route path="*" element={<PageNotFound />} />
+
+  // TIP: 
+  function App() {
+    return (
+      <div>
+        <h1>Hello</h1>  // this code will be the same , ony the route part will be changed.
+        <BrowserRouter>
+          <Routes>
+            <Route path="product" element={<Product />} />
+            <Route path="/" element={<Homepage />} />
+            <Route path="pricing" element={<Pricing />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    );
+  }
+
+//////////////////////////
+/// LINKING ROUTS
+
+  // Remember to first define routes , in the App.jsx then create links 
+
+  // we dont use <a></a> tags. 
+
+  // without reloading
+  function Home() {
+    return (
+      <div>
+        <h1>WorldWise</h1>
+        <Link to="/pricing">Pricing</Link>  // this tag
+      </div>
+    );
+  }
+
+  // pages are different and Components are different
+
+  // to create a navigation
+  src/components/PageNav.jsx
+
+  import { Link } from "react-router-dom";
+
+  function PageNav() {
+    return (
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/pricing">Pricing</Link>
+          </li>
+          <li>
+            <Link to="/product">Product</Link>
+          </li>
+        </ul>
+      </nav>
+    );
+  }
+
+  export default PageNav;
+  // this is a reusable coponent that we can include in our pages. 
+
+  // importing that component in our pages and using it.
+
+  import PageNav from "../components/PageNav";
+
+  function Product() {
+    return (
+      <div>
+        <PageNav />
+        <h1>Product</h1>
+      </div>
+    );
+  }
+  export default Product;
+
+  // To get highlights about the currently visited page, or to know on what page i am: 
+  // replace <Link></Link> with <NavLink></NavLink> we will get a class of active on it.
+
+//////////////////////////
+/// CREATING COMMON COMPONENTS
+
+  /components/Component.jsx
+
+  // after creating this , import the coponenet in the pages you want to use them.
+  // inside any page inside pages/
+  import PageNav from "../coponents/ComponentName"
+
+  // like this you can use it.
+
+  // common coponent: AppNav.jsx
+  // common component have its own , styles: AppNav.module.css
+
+//////////////////////////
+/// STYLING OPTIONS IN REACT
+
+  1. style the element by using props inline css , (locally)
+  2. className (global css file) (ths causes problem , coz , if we change css , it can effect the component depending on it) 
+
+  3. Css modules (1 css file per component )
+  4. Css in JS ( css insite a component file , creating a style object and using it.)
+
+  5. Utlitity- first css , (tailwindcss) like bootstrap (JSX)
+
+//////////////////////////
+/// USING STYLES
+
+  // Css modules comes predefined with create-react-app and vite
+
+  // to implement css: 
+
+  /components/ComponentName.module.css
+
+  // inside this we can give style , but we have to use only class names. 
+
+  // importing the style in our component
+  import styles from "./PageNav.module.css";
+
+  // using the styles
+  <nav className={styles.nav}>
+
+  // style: example
+  .nav {
+    background-color: red;
+  }
+
+  .nav ul {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+  }
+
+  // Different css files can have same class names , because , The compiler gives it a unique class name after, compilation
+
+  // to use global css , save the file in src , and then import it in main.jsx
+  import "./index.css";
+
+
+  // Breaking the rule , and declaring a class as global , so that we can use it , in Any other component 
+  // this inside any of the ComponenetName.module.css
+  // wired string will not be attached
+
+  :global(.test) {
+    ...styling
+  }
+
+  // When we use <NavLink> and we click on that link , .active is added to the component , to select that.
+
+  .nav :global(.active) {
+    background-color: green;
+  }
+
+//////////////////////////
+/// NESTED ROUTERS , INDEX ROUTE
+
+  // part of the user interface to be cotrolled by part of the url 
+
+  function App() {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="app" element={<AppLayout />}>
+            <Route path="cities" element={<p>List of cities</p>} />
+          </Route>
+          <Route path="product" element={<Product />} />
+          <Route path="/" element={<Homepage />} />
+          <Route path="pricing" element={<Pricing />} />
+          <Route path="login" element={<Login />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+
+  export default App;
+
+        <Routes>
+          <Route path="app" element={<AppLayout />}>
+            <Route path="cities" element={<p>List of cities</p>} />
+            <Route path="countries" element={<p>Contries</p>} />
+            <Route path="form" element={<p>form</p>} />
+          </Route>
+
+
+  import { Outlet } from "react-router-dom";
+
+  // place this inside the Component where you want to render the passed element
+  <Outlet />
+
+  // now if user accessed only /app route it should be redirected directly to app/cities
+  // we use index route (default child route)
+
+  // this route will be executed by default
+          <Route index element={<Homepage />} />
+
+  // using state is the same thing , just we have to pass the states to the element={<HHH here={here} />}
+
+            <Route
+              index
+              element={<CityList cities={cities} isLoading={isLoading} />}
+            />
+
+
+  // good array method use.
+  // to filter out unique names from an array
+
+  const country = cities.reduce((arr, city) => {
+      if (!arr.map((el) => el.country).includes(city.country)) {
+        return [...arr, { country: city.country, emoji: city.emoji }];
+      } else {
+        return arr;
+      }
+    }, []);
+
+//////////////////////////
+/// STORING STATE IN URL
+
+  // placing state in the url is ezy way to store the global state, 
+
+  // When we bookmark this state , the UI is stored the way it is. 
+
+  // we use params (lisbon) or query string(after ? everything). 
+  www.example.com/app/cities/lisbon?lat=38.72&&lng=91.141
+
+
+  // we create a link such that when user click on it , params and query string is set. 
+  // then that data can be used by next component that is to be rendered. 
+
+//////////////////////////
+/// DYNAMIC ROUTES WITH URL PARAMETERS
+
+  // Create a route. 
+  // id is the variable. 
+  1. <Route path="cities/:id" element={<City />} />
+
+  2. Create the link 
+    return (
+      <li>
+        <Link className={styles.cityItem} to={`${city.id}`}>  // we dont us / it will point to root
+          <span className={styles.emoji}>{emoji}</span>
+          <h3 className={styles.name}>{cityName}</h3>
+          <time className={styles.date}>({formatDate(date)})</time>
+          <button className={styles.deleteBtn}>&times;</button>
+        </Link>
+      </li>
+    );
+
+  3. To get the data using the useParams() hook
+
+  // we will get an object , representing the data we pass. 
+    const x = useParams();
+    console.log(x);
+
+//////////////////////////
+/// SETTING A QUERY STRING
+
+  // we are modifing the url 
+        <Link
+          className={styles.cityItem}
+          to={`${id}?lat=${position.lat}&&lng=${position.lng}`}
+        >
+
+  // in the Map() component , we use this , to search for parameters in the url
+    const [searchParams, setSearchParams] = useSearchParams();
+
+  // to get the value of the parameter;
+    const lat = searchParams.get("lat");
+    const lng = searchParams.get("lng");
+
+
+  // when we us setSearchParams({}); the data is updated in the url , then it is updated everywhere wher we are using that data. 
+  
+// PROGRAMATICALLY NAVAGATING 
+//////////////////////////
+/// USENAVIGATE HOOK
+
+  // moving to a new URL without the user having to click on any link
+
+  // this returns an function which we can use to navigate in the url.  
+  const navigate = useNavigate();
+
+  // Example: (when user click on the map coponent, link will change and form will appear)
+  function Map() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const lat = searchParams.get("lat");
+    const lng = searchParams.get("lng");
+
+    const navigate = useNavigate();
+
+    return (
+      <div className={styles.mapContainer} onClick={() => navigate("form")}>
+        hello
+      </div>
+    );
+  }
+
+  export default Map;
+
+  // To navigate back in the browser history. (-1)
+          <Button onClick={() => navigate(-1)} type="primary">
+            Add
+          </Button>
+
+  // when button is inside an form remember to e.preventDefault()
+  // -1 -2 -3 to move back and forth +1 , +2 , +3
+
+//////////////////////////
+/// WITH <NAVIGATE />
+
+  // when we come to a route , and we want to route it back to another route we use this. 
+
+          <Route path="app" element={<AppLayout />}>
+            <Route index element={<Navigate replace to="cities" />} />
+            <Route
+              path="cities"
+              element={<CityList cities={cities} isLoading={isLoading} />}
+            />
+
+  // if no replace , it will not go back in history

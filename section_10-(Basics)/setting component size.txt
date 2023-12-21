@@ -1,0 +1,21 @@
+//////////////////////////
+/// SETTING COMPONENT SIZE
+
+	when component needs a lot of props , its to large 
+
+	abstraction = to hide details 
+
+	// when to seperate big component to small component 
+	1. logical seperation of content/layout
+	2. Reusability 
+	3. Responsibilites / complexity 
+
+	creating new components creats more abstraction (hiding of details)
+	never declare new component inside of an component.
+
+  // 3 types of natural component's 
+
+  1. Stateless (presentational component)
+  2. Statefull components 
+  3. structural components 
+
