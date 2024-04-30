@@ -1,0 +1,102 @@
+
+//////////////////////////
+/// MEMO
+
+  Memoization: We call a function , it executes and stores the result in memory, then when we put same input to the function it give output from the cache. 
+
+  1. Memoize components with memo.
+  2. Memoize objects with useMemo.
+  3. Memoize functions with useCallback
+
+  Memo: A component that doest rerender with the parent rerenders (props will be same.)
+
+  Which component to make memo component?
+  -> A component that takes a lot of to rerender as its parent component renders. 
+
+  const Component memo(<Component />);
+
+  ex: const Archive = memo(function Archive({ show }) {
+
+  DONE!!
+
+  // When we pass an object to Archive ,  it rerenders. 
+  because in react , if a component rerenders , component get new function and new object , even if the object is same , that why it happens.
+
+  //solution: useMemo() to memoise objects , useCallback() to memoize functions.
+
+  this also have dependency array like useEffect. 
+
+  One more use of Memo: // Memoizing: store hard calculations for speed. 
+
+//////////////////////////
+/// USEMEMO
+
+  const obj = {
+      show: false,
+    };
+
+  // empty array: obj will be calculated only once. 
+    const obj = useMemo(() => {
+      return {
+        show: false,
+      };
+    }, []); 
+
+  // if we use a state.
+    const obj = useMemo(() => {
+      return {
+        title: `THis is somthing ${aStateVariable}`,
+        show: false,
+      };
+    }, [aStateVariable]); 
+
+//////////////////////////
+/// USECALLBACK
+
+    const handleAddPost = useCallback(function handleAddPost(post) {
+      setPosts((posts) => [post, ...posts]);
+    }, []);
+
+  then if we pass the function to the componet , it will not rerendured. 
+
+  useState() => setVariable -> function -> always memosized.
+
+//////////////////////////
+/// OPTMIZING RERENDERS FROM COTEXT
+
+  // when to do this?
+  1. the state in the context changes very frequently 
+  2. there are a lot of consumers. 
+  3. the app is laggi
+
+
+  // Why to do this . 
+  The object we are using in the value={} is an object , and provider is an component , so a render in the Provider component will make all the child rerender , coz it has new object. 
+
+  // we memoize , that object.
+
+      <PostContex.Provider
+        value={{
+          posts: searchedPosts,
+          onAddPost: handleAddPost,
+          onClearPost: handleClearPosts,
+          searchQuery,
+          setSearchQuery,
+        }}
+      >
+
+    const value = useMemo(() => {
+      return {
+        posts: searchedPosts,
+        onAddPost: handleAddPost,
+        onClearPost: handleClearPosts,
+        searchQuery,
+        setSearchQuery,
+      };
+    }, [searchQuery, searchedPosts]);
+
+
+  // Whenever we update 1 thing in the context , all component that is using that context , gets updated. 
+  // that's why we create per state 1 context. 
+  // this is seperation of cencerns. 
+  // use multiple Context. 

@@ -1,0 +1,55 @@
+//////////////////////////
+/// STYLING OPTIONS IN REACT
+
+  1. style the element by using props inline css , (locally)
+  2. className (global css file) (ths causes problem , coz , if we change css , it can effect the component depending on it) 
+  3. Css modules (1 css file per component )
+  4. Css in JS ( css insite a component file , creating a style object and using it.)
+  5. Utlitity- first css , (tailwindcss) like bootstrap (JSX)
+
+//////////////////////////
+/// USING STYLES
+
+  // Css modules comes predefined with create-react-app and vite
+
+  // to implement css: 
+
+  /components/ComponentName.module.css
+
+  // inside this we can give style , but we have to use only class names. 
+
+  // importing the style in our component
+  import styles from "./PageNav.module.css";
+
+  // using the styles
+  <nav className={styles.nav}>
+
+  // style: example
+  .nav {
+    background-color: red;
+  }
+
+  .nav ul {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+  }
+
+  // Different css files can have same class names , because , The compiler gives it a unique class name after, compilation
+
+  // to use global css , save the file in src , and then import it in main.jsx
+  import "./index.css";
+
+  // Breaking the rule , and declaring a class as global , so that we can use it , in Any other component 
+  // this inside any of the ComponenetName.module.css
+  // wired string will not be attached
+
+  :global(.test) {
+    ...styling
+  }
+
+  // When we use <NavLink> and we click on that link , .active is added to the component , to select that.
+
+  .nav :global(.active) {
+    background-color: green;
+  }

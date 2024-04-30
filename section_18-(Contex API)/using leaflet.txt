@@ -1,0 +1,51 @@
+//////////////////////////
+/// USING LEAFLET
+
+  npm install react-leaflet leaflet
+
+  // in the global css. 
+  @import "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css";
+
+  // inside the div of Map.jsx
+    <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Marker position={position}>
+            <Popup>
+              A pretty CSS3 popup. <br /> Easily customizable.
+            </Popup>
+          </Marker>
+        </MapContainer>
+
+  // V1 of that Map component 
+    function Map() {
+      const [searchParams, setSearchParams] = useSearchParams();
+      const lat = searchParams.get("lat");
+      const lng = searchParams.get("lng");
+      const [mapPosition, setMapPosition] = useState([40, 0]);
+
+      const navigate = useNavigate();
+
+      return (
+        <div className={styles.mapContainer} onClick={() => navigate("form")}>
+          <MapContainer
+            center={mapPosition}
+            zoom={13}
+            scrollWheelZoom={true}
+            className={styles.map}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+            />
+            <Marker position={mapPosition}>
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker>
+          </MapContainer>
+        </div>
+      );
+    }

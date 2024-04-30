@@ -1,0 +1,85 @@
+STEPS: 
+  1. Gather application requirements. 
+  2. Divide the application into pages. 
+  3. divide the application into features catogaries
+  4. decide on what libraries 
+
+FEATURES: 
+
+  1. Authentication
+  2. Cabins 
+  3. Bookings 
+  4. Checking in / out
+  5. Guests
+  6. Dashboard
+  7. Settings
+
+PAGES: 
+
+  1. Dashboard         /dashboard
+  2. Bookings          /bookings
+  3. Cabins            /cabins
+  4. Booking check in  /bookings/:bookingID
+  5. App settings       /setttings
+  6. User sing up     /users
+  7. Authentication    /login
+  8. Account settings   /account
+
+STRUCTURE:
+  view src folder
+
+RENDERING
+
+  // good for internal application of a company (SPA)
+  1. clint side react.  (vannila react)
+
+  // good for search optimization
+  2. server side react. (Next.js) (Remix)
+
+TECHNOLOGY DECISINS:
+
+  Routing:                  React Router
+  Styling:                  Styled Components
+  Remote State Management:  React Query (Best way for managing remote state)
+  UI state management:      Context API
+  Form managment:           React hook form 
+
+  Other's:    React icons / React host toast / Recharts / date-fns / Supabase
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

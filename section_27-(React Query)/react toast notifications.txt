@@ -1,0 +1,55 @@
+//////////////////////////
+/// REACT TOAST NOTIFICATIONS (2023-10-05)
+//////////////////////////
+NOTES:
+
+  1. installing package. 
+
+    npm i react-hot-toast
+
+  2. setting up the toast 
+
+    // in the App.jsx
+
+    // self closing component in the top level 
+
+    <QueryClientProvider>
+
+      // this is the component
+      <Toaster
+        position="top-center"
+        gutter={12}
+        containerStyle={{
+          margin: "8px",
+        }}
+        toastOptions={{
+          success: {
+            duration: 3000,
+          },
+          error: {
+            duration: 5000,
+          },
+          style: {
+            fontSize: "16px",
+            maxWidth: "500px",
+            backgroundColor: "var(--color-grey-0)",
+            color: "var(--color-grey-700)",
+          },
+        }}
+      />
+    </QueryClientProvider>
+
+  3. using the toast
+
+    import toast from "react-hot-toast";
+
+    const { isDeleting, mutate } = useMutation({
+      mutationFn: (id) => deleteCabin(id),
+      onSuccess: () => {
+        toast.success("Deleted");
+        queryClient.invalidateQueries({
+          queryKey: ["cabins"],
+        });
+      },
+      onError: (err) => toast.error(err.message),
+    });
